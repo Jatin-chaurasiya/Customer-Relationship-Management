@@ -1,0 +1,23 @@
+<div th:fragment="employee-sidebar" class="col-md-3 col-lg-2 bg-dark text-white vh-100 position-fixed" style="z-index:-2000px">
+    <nav class="nav flex-column mt-4">
+        <h5 class="text-white ms-3 mb-4" th:text="'Welecome : ' +${sessionEmployee.name}"></h5>
+
+        <a class="nav-link text-white" th:href="@{/employeeProfile}"><i class="bi bi-person-fill"></i> My Profile </a>
+
+        <a class="nav-link text-white d-flex justify-content-between align-items-center"
+           th:href="@{/sellCourse}">
+            <div><i class="bi bi-easel-fill"></i> Sell Course</div>
+        </a>
+
+        <a class="nav-link text-white d-flex justify-content-between align-items-center" th:href="@{/inquiryMangement}">
+            <div><i class="bi bi-chat-dots-fill"></i> Inquiry Management</div>
+        </a>
+
+        <a class="nav-link text-white d-flexjustify-content-between align-items-center" th:href="@{/followUps}">
+            <div><i class="bi bi-graph-up-arrow"></i> Follow-Ups</div>
+        </a>        
+        <a class="nav-link text-white" th:href="@{/employeeLogout}">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+    </nav>
+</div>

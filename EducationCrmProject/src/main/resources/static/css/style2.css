@@ -1,0 +1,23 @@
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;       
+  height: 100vh;
+  background-color: #343a40;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.adminContainer {
+  margin-left: 200px;  
+  padding: 0; 
+  min-height: 100vh;
+  overflow-x: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.adminContainer .content {
+  width: 100%;
+}

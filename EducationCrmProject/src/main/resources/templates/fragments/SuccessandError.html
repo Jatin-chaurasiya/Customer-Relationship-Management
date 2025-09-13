@@ -1,0 +1,20 @@
+<div th:fragment="SuccessandError" class="successError">
+
+	<!-- Success Message -->
+	<div th:if="${successMsg}"
+		class="mb-3 alert alert-success alert-dismissible fade show text-center"
+		role="alert">
+		<span th:text="${successMsg}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert"
+			aria-label="Close"></button>
+	</div>
+
+	<!-- Error Message -->
+	<div th:if="${errorMsg}"
+		class="mb-3 alert alert-danger alert-dismissible fade show text-center"
+		role="alert">
+		<span th:text="${errorMsg}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert"
+			aria-label="Close"></button>
+	</div>
+</div>

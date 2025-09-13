@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Profile Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <!--HEADER START-->
+    <header>
+        <nav class="navbar navbar-expand-lg bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="images/logo.png" alt="CampusConnect Logo" width="60">
+                    <span class="h3 text-white">CampusConnect</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto  mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link ms-2 text-white" aria-current="page" href="index.html">Home</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link ms-2 text-white" aria-current="page" href="my-enrollments.html">My
+                                Enrollments</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-1 mb-lg-0 ms-4">
+                        <li class="nav-item">
+                            <a class="nav-link ms-2 text-white" aria-current="page" href="std-profile.html">
+                                <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                                Hello,Jatin
+                            </a>
+                        </li>
+                    </ul>
+                    <a href="login.html" class="btn btn-danger ms-1">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Header Ends -->
+
+    <!--Main  section Start-->
+    <main>
+        <section class="container py-5 bg-light">
+            <h3 class="text-center mb-5">My Enrollments</h3>
+
+            <!--Courses-->
+            <div class="row g-4"><!-- removed justify-content-center -->
+
+                <!--one course card start-->
+                <div class="col-lg-3 col-md-6 shadow-sm">
+                    <div class="card h-100 shadow-sm">
+                        <img src="images/corejava2.png" class="card-img-top" alt="course Img">
+                        <div class="card-body">
+                            <h5 class="card-title">Core Java</h5>
+                            <p class="card-text">
+                                This course contains core java concepts, interview preparation, case studies and 2
+                                projects.
+                            </p>
+                            <!-- Button -->
+                            <a href="#" class="btn btn-primary px-4">Start Course</a>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Updated : 2 days ago
+                        </div>
+                    </div>
+                </div>
+                <!--one course card end-->
+
+                <div class="col-lg-3 col-md-6 shadow-sm">
+                    <div class="card h-100 shadow-sm">
+                        <img src="images/corejava2.png" class="card-img-top" alt="course Img">
+                        <div class="card-body">
+                            <h5 class="card-title">Core Java</h5>
+                            <p class="card-text">
+                                This course contains core java concepts, interview preparation, case studies and 2
+                                projects.
+                            </p>
+                            <!-- Button -->
+                            <a href="#" class="btn btn-primary px-4">Start Course</a>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Updated : 2 days ago
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    <!--Main section ends-->
+    <!--Footer starts-->
+    <footer class="footer bg-dark text-white pt-4">
+        <div class="container">
+            <div class="row">
+                <!-- Logo / About -->
+                <div class="col-md-5 mb-3">
+                    <h5 class="fw-bold">CampusConnect</h5>
+                    <p class="small">
+                        Empowering students with knowledge through quality courses, projects, and interview preparation.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-3 mb-3">
+                    <h6 class="fw-bold">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Home</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Courses</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">About Us</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Policies -->
+                <div class="col-md-3 mb-3">
+                    <h6 class="fw-bold">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Terms of Service</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-secondary">
+
+            <!-- Bottom Bar -->
+            <div class="row">
+                <div class="col-md-6 text-start">
+                    <p class="mb-0 small">© 2025 <strong>CampusConnect</strong>. All rights reserved.</p>
+                </div>
+                <p class="col-md-6 text-end">
+                    Follow us on:
+                    <a href="#" class="text-white ms-2 text-decoration-none"><i class="bi bi-facebook"></i> Facebook</a>
+                    <span class="mx-2 text-secondary">|</span>
+                    <a href="#" class="text-white ms-2 text-decoration-none"><i class="bi bi-linkedin"></i> LinkedIn</a>
+                    <span class="mx-2 text-secondary">|</span>
+                    <a href="#" class="text-white ms-2 text-decoration-none"><i class="bi bi-instagram"></i>
+                        Instagram</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!--Footer ends-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

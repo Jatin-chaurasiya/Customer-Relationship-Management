@@ -1,0 +1,23 @@
+<div th:fragment="paginationfeedback(feedbackPage)" class="feedback-pagination">
+	<nav aria-label="Page navigation">
+		<ul class="pagination justify-content-center">
+			<li class="page-item" th:classappend="${feedbackPage.first} ? 'disabled'">
+				<a class="page-link"
+				   th:href="@{/adminFeedback(page=${feedbackPage.number - 1}, size=${feedbackPage.size})}">&laquo;</a>
+			</li>
+
+			<li class="page-item"
+				th:each="i : ${#numbers.sequence(0, feedbackPage.totalPages - 1)}"
+				th:classappend="${feedbackPage.number == i} ? 'active'">
+				<a class="page-link"
+				   th:href="@{/adminFeedback(page=${i}, size=${feedbackPage.size})}"
+				   th:text="${i + 1}"></a>
+			</li>
+
+			<li class="page-item" th:classappend="${feedbackPage.last} ? 'disabled'">
+				<a class="page-link"
+				   th:href="@{/adminFeedback(page=${feedbackPage.number + 1}, size=${feedbackPage.size})}">&raquo;</a>
+			</li>
+		</ul>
+	</nav>
+</div>

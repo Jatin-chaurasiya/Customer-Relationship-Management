@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Profile</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="stylesheet" th:href='@{/css/style.css}' />
+</head>
+
+<body>
+	<!--Sidebar-->
+	<div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+	<!--End of Sidebar-->
+
+	<!--Content-->
+	<div class="content">
+		<h2>Course Management</h2>
+		<p>Add Course Below...</p>
+
+		<section class="mt-5">
+			<h3 class="text-center">Add Course</h3>
+			<div class="row justify-content-center">
+				<div class="card shadow p-5" style="width: 40%">
+
+
+					<!-- Include fragment -->
+					<div th:replace="~{fragments/SuccessandError :: SuccessandError}"></div>
+
+
+					<form th:action="@{/addCourseForm}" method="post"
+						th:object="${course}" enctype="multipart/form-data">
+
+						<div class="mb-3">
+							<label class="form-label">Course Name:</label> <input type="text"
+								class="form-control" th:field="*{name}"
+								placeholder="Enter course name" required />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Course Description:</label>
+							<textarea class="form-control" th:field="*{description}"
+								placeholder="Enter course description" required></textarea>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Course Original Price:</label> <input
+								type="text" class="form-control" th:field="*{originalPrice}"
+								placeholder="Enter original price" required />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Course Discounted Price:</label> <input
+								type="text" class="form-control" th:field="*{discountedPrice}"
+								placeholder="Enter discounted price" required />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Course Updated On:</label> <input
+								type="text" class="form-control" th:field="*{updateOn}"
+								placeholder="Enter update date" required />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Course Image:</label> <input
+								type="file" class="form-control" name="courseImg" required />
+						</div>
+
+						<button type="submit" class="btn btn-primary">Add Course</button>
+					</form>
+
+
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>

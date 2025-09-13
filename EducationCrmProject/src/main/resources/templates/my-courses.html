@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Profile Page</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+	<!--HEADER START-->
+	<div th:replace="~{fragments/headerProfile :: header}"></div>
+	<!-- Header Ends -->
+
+	<!--Main  section Start-->
+	<main class="container-fluid" style="min-height: 500px;">
+		<section class="container py-5 bg-light">
+			<h3 class="text-center mb-4">My Purchased Courses</h3>
+
+			<!-- Show message only if no courses -->
+			<div th:if="${#lists.isEmpty(purchasedCourseList)}"
+				class="text-center">
+				<h3 class="text-danger">Sorry! You didn’t purchase any course
+					yet...</h3>
+			</div>
+
+			<!-- Show courses if list is not empty -->
+			<div class="row g-4" th:if="${!#lists.isEmpty(purchasedCourseList)}">
+				<div th:each="purchasedCourse : ${purchasedCourseList}" class="col">
+					<div class="card shadow-sm" style="width: 18rem">
+						<img th:src="@{${purchasedCourse.imageUrl}}" class="card-img-top"
+							alt="course Img">
+						<div class="card-body">
+							<h5 class="card-title">
+								<span th:text="${purchasedCourse.courseName}"></span>
+							</h5>
+							<p class="card-text">
+								<span th:text="${purchasedCourse.description}"></span>
+							</p>
+							<div>
+								<button class="btn btn-outline-success px-4">Start
+									Course</button>
+							</div>
+						</div>
+						<div class="card-footer text-muted">
+							Update: <span th:text="${purchasedCourse.updatedOn}"></span>
+						</div>
+						<div class="card-footer text-muted">
+							<small> Purchased On:<br /> <strong><span
+									th:text="${purchasedCourse.purchasedOn}"></span></strong>
+							</small>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</main>
+	<!--Main section ends-->
+
+	<!--Footer starts-->
+	<div th:replace="~{fragments/footer :: footer}"></div>
+	<!--Footer ends-->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+
+
+
+

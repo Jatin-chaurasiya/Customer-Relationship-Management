@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales Information</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+<link rel="stylesheet" th:href='@{/css/style.css}' />
+<link rel="stylesheet" th:href='@{/css/style2.css}' />
+</head>
+
+<body>
+	<!--Sidebar-->
+	<div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+	<!--End of Sidebar-->
+	<!--Content-->
+	<div class="content">
+		<h2>Sales Information</h2>
+		<p>Below are the details of total sales and individual sales by
+			employee</p>
+      <div class="adminContainer">
+		<section class="mt-5">
+  <h3 class="text-center">Sales Information</h3>
+  <div class="row justify-content-center">
+    <div class="card shadow p-5" style="width: 80%">
+      
+      <!-- Total Sales Summary (separate from table) -->
+      <div class="mb-4">
+        <h4 th:text="'Total sales by all Employee : Rs. ' + ${totalSales}"></h4>
+      </div>
+
+      <!-- Employee Sales Table -->
+      <table
+        class="table table-bordered table-striped table-hover align-middle text-center">
+        <thead class="table-primary">
+          <tr>
+            <th scope="col">Employee Name</th>
+            <th scope="col">Employee Email</th>
+            <th scope="col">Employee Phone No.</th>
+            <th scope="col">Total Sales</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="list : ${salesList}">
+            <td th:text="${list[0]}"></td>
+            <td th:text="${list[1]}"></td>
+            <td th:text="${list[2]}"></td>
+            <td th:text="'Rs.' + ${list[3]}"></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</section>
+		
+		</div>
+	</div>
+
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>

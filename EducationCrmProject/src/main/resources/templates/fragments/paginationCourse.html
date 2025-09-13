@@ -1,0 +1,23 @@
+<div th:fragment="paginationCourse(coursePage)" class="course-pagination">
+	<nav aria-label="Page navigation">
+		<ul class="pagination justify-content-center">
+			<li class="page-item" th:classappend="${coursePage.first} ? 'disabled'">
+				<a class="page-link"
+				   th:href="@{/courseMangement(page=${coursePage.number - 1}, size=${coursePage.size})}">&laquo;</a>
+			</li>
+
+			<li class="page-item"
+				th:each="i : ${#numbers.sequence(0, coursePage.totalPages - 1)}"
+				th:classappend="${coursePage.number == i} ? 'active'">
+				<a class="page-link"
+				   th:href="@{/courseMangement(page=${i}, size=${coursePage.size})}"
+				   th:text="${i + 1}"></a>
+			</li>
+
+			<li class="page-item" th:classappend="${coursePage.last} ? 'disabled'">
+				<a class="page-link"
+				   th:href="@{/courseMangement(page=${coursePage.number + 1}, size=${coursePage.size})}">&raquo;</a>
+			</li>
+		</ul>
+	</nav>
+</div>

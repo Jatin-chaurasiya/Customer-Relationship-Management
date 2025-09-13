@@ -1,0 +1,27 @@
+<div th:fragment="paginationEmployee(employeePage)"
+	class="employee-pagination">
+	<div th:fragment="paginationEmployee(employeePage)"
+		class="employee-pagination">
+		<nav aria-label="Page navigation">
+			<ul class="pagination justify-content-center">
+				<li class="page-item"
+					th:classappend="${employeePage.first} ? 'disabled'"><a
+					class="page-link"
+					th:href="@{/employeeMangement(page=${employeePage.number - 1}, size=${employeePage.size})}">&laquo;</a>
+				</li>
+				<li class="page-item"
+					th:each="i : ${#numbers.sequence(0, employeePage.totalPages - 1)}"
+					th:classappend="${employeePage.number == i} ? 'active'"><a
+					class="page-link"
+					th:href="@{/employeeMangement(page=${i}, size=${employeePage.size})}"
+					th:text="${i + 1}"></a></li>
+				<li class="page-item"
+					th:classappend="${employeePage.last} ? 'disabled'"><a
+					class="page-link"
+					th:href="@{/employeeMangement(page=${employeePage.number + 1}, size=${employeePage.size})}">&raquo;</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+
+</div>

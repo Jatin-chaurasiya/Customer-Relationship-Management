@@ -1,0 +1,63 @@
+
+<footer th:fragment="footer" class="footer bg-dark text-white pt-4">
+	<div class="container">
+		<div class="row">
+			<!-- Logo / About -->
+			<div class="col-md-5 mb-3">
+				<h5 class="fw-bold">CampusConnect</h5>
+				<p class="small">Empowering students with knowledge through
+					quality courses, projects, and interview preparation.</p>
+			</div>
+
+			<!-- Quick Links -->
+			<div class="col-md-3 mb-3">
+				<h6 class="fw-bold">Quick Links</h6>
+				<ul class="list-unstyled">
+					<li><a th:href="@{/}" class="text-white text-decoration-none">Home</a></li>
+					<li><a th:href="@{/courses}"
+						class="text-white text-decoration-none">Courses</a></li>
+					<li><a th:href="@{/about}"
+						class="text-white text-decoration-none">About Us</a></li>
+					<li><a th:href="@{/contact}"
+						class="text-white text-decoration-none">Contact</a></li>
+				</ul>
+			</div>
+
+			<!-- Policies -->
+			<div class="col-md-3 mb-3">
+				<h6 class="fw-bold">Legal</h6>
+				<ul class="list-unstyled">
+					<li><a th:href="@{/privacy}"
+						class="text-white text-decoration-none">Privacy Policy</a></li>
+					<li><a th:href="@{/terms}"
+						class="text-white text-decoration-none">Terms of Service</a></li>
+					<li><a th:href="@{/refund}"
+						class="text-white text-decoration-none">Refund Policy</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<hr class="border-secondary">
+
+		<!-- Bottom Bar -->
+		<div class="row">
+			<div class="col-md-6 text-start">
+				<p class="mb-0 small">
+					© 2025 <strong>CampusConnect</strong>. All rights reserved.
+				</p>
+			</div>
+			<p class="col-md-6 text-end">
+				Follow us on: <a href="#"
+					class="text-white ms-2 text-decoration-none"><i
+					class="bi bi-facebook"></i> Facebook</a> <span
+					class="mx-2 text-secondary">|</span> <a href="#"
+					class="text-white ms-2 text-decoration-none"><i
+					class="bi bi-linkedin"></i> LinkedIn</a> <span
+					class="mx-2 text-secondary">|</span> <a href="#"
+					class="text-white ms-2 text-decoration-none"><i
+					class="bi bi-instagram"></i> Instagram</a>
+			</p>
+		</div>
+	</div>
+</footer>
+
