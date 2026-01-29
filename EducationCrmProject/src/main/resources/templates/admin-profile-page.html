@@ -13,9 +13,8 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-<link rel="stylesheet" th:href="@{/css/style.css}" />
-<link rel="stylesheet" th:href="@{/css/style1.css}" />
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<link rel="stylesheet" th:href="@{/css/admin-layout.css}" />
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
@@ -27,51 +26,51 @@
 
 	<!--Content-->
 	<section class="adminContainer">
-	<div class="content">
-		<h2>Admin Details</h2>
-		<p>Dashboard contains the different graphs and charts showing the
-			different Details..</p>
+		<div class="content">
+			<h2>Admin Details</h2>
+			<p>Dashboard contains the different graphs and charts showing the
+				different Details..</p>
 
 
-		<section class="container py-5">
-			<div class="row justify-content-center">
+			<section class="container py-5">
+				<div class="row justify-content-center">
 
-				<div class="col-lg-6">
-					<div class="card shadow p-3">
-						<h4 class="text-center">Todays Sale Graph</h4>
-						<div id="myPlot"></div>
-					</div>
-				</div>
-
-				<div class="col-lg-6" style="max-height: 50%">
-					<div class="card shadow p-3">
-						<h4 class="text-center">Courses Sold Graph</h4>
-						<div style="height: 440px">
-							<canvas id="myPieChart"></canvas>
+					<div class="col-lg-6">
+						<div class="card shadow p-3">
+							<h4 class="text-center">Todays Sale Graph</h4>
+							<div id="myPlot"></div>
 						</div>
 					</div>
-				</div>
 
-			</div>
-		</section>
-
-		<section class="container py-5">
-			<div class="row justify-content-center">
-
-				<div class="col-lg-12">
-					<div class="card shadow p-3">
-						<h4 class="text-center">Courses Sold Per Day Graph</h4>
-						<canvas class="mt-3" id="myChart"></canvas>
+					<div class="col-lg-6" style="max-height: 50%">
+						<div class="card shadow p-3">
+							<h4 class="text-center">Courses Sold Graph</h4>
+							<div style="height: 440px">
+								<canvas id="myPieChart"></canvas>
+							</div>
+						</div>
 					</div>
+
 				</div>
+			</section>
 
-			</div>
-		</section>
+			<section class="container py-5">
+				<div class="row justify-content-center">
 
-		<section class="mt-5">
-			<div class="row justify-content-center"></div>
-		</section>
-	</div>
+					<div class="col-lg-12">
+						<div class="card shadow p-3">
+							<h4 class="text-center">Courses Sold Per Day Graph</h4>
+							<canvas class="mt-3" id="myChart"></canvas>
+						</div>
+					</div>
+
+				</div>
+			</section>
+
+			<section class="mt-5">
+				<div class="row justify-content-center"></div>
+			</section>
+		</div>
 	</section>
 
 	<script
@@ -171,15 +170,11 @@
 		graphThree();
 	</script>
 	<script>
-  (function() {
-    history.pushState(null, '', '/loginForm');
-    history.pushState(null, '', window.location.pathname);
-
-    window.addEventListener('popstate', function onBack() {
-      window.removeEventListener('popstate', onBack);
-      window.location.href = '/adminProfile';
-    }, { once: true });
-  })();
+// Back button disable karne ke liye (optional)
+window.history.pushState(null, null, window.location.href);
+window.addEventListener('popstate', function() {
+    window.history.pushState(null, null, window.location.href);
+});
 </script>
 
 

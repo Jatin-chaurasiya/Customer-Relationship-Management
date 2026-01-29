@@ -10,9 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import in.sp.main.entities.Feedback;
+import in.sp.main.entities.User;
 import in.sp.main.services.FeedbackService;
 
 @Controller
@@ -23,9 +25,8 @@ public class FeedbackController {
 	private FeedbackService feedbackService;
 
 	@GetMapping("/provideFeedback")
-	public String openProvideFeedbackPage(Model model) {
+	public String openProvideFeedbackPage(@SessionAttribute("sessionUser") User sessionUser, Model model) {
 		model.addAttribute("feedback", new Feedback());
-
 		return "provide-feedback";
 	}
 

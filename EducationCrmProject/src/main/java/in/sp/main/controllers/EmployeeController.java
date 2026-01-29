@@ -12,9 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import in.sp.main.dto.EmployeeProfileDTO;
@@ -26,10 +23,10 @@ import in.sp.main.repositories.EmployeeOrderRepository;
 import in.sp.main.services.CourseService;
 import in.sp.main.services.EmployeeAdminService;
 import in.sp.main.services.OrdersService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@SessionAttributes("sessionEmployee")
 public class EmployeeController {
 
 	@Autowired
@@ -40,72 +37,146 @@ public class EmployeeController {
 
 	@Autowired
 	private OrdersService ordersService;
+
 	@Autowired
 	private EmployeeOrderRepository employeeOrderRepository;
 
 	@GetMapping("/employeeLogin")
-	public String openEmployeeLoginPage(Model model) {
+	public String openEmployeeLoginPage(Model model, HttpSession session) {
+		if (session.getAttribute("sessionEmployee") != null) {
+			return "redirect:/employeeProfile";
+		}
 		model.addAttribute("employee", new Employee());
 		return "employee-login-page";
 	}
 
 	@PostMapping("/employeeLoginForm")
-	public String employeeLoginForm(@ModelAttribute("employee") Employee employee, Model model) {
-		if (employeeAdminService.login(employee.getEmailId(), employee.getPassword())) {
-			Employee loggedIn = employeeAdminService.getEmployeeDetails(employee.getEmailId());
+	public String employeeLoginForm(@ModelAttribute("employee") Employee employee, HttpSession session,
+			HttpServletRequest request, Model model) {
+		try {
+			if (employee.getEmailId() == null || employee.getEmailId().trim().isEmpty()) {
+				model.addAttribute("errorMsg", "Email is required");
+				model.addAttribute("employee", new Employee());
+				return "employee-login-page";
+			}
 
-			model.addAttribute("sessionEmployee", loggedIn);
+			if (employee.getPassword() == null || employee.getPassword().isEmpty()) {
+				model.addAttribute("errorMsg", "Password is required");
+				model.addAttribute("employee", new Employee());
+				return "employee-login-page";
+			}
 
-			return "redirect:/employeeProfile";
-		} else {
-			model.addAttribute("errorMsg", "Incorrect Email or Password!");
+			if (employeeAdminService.login(employee.getEmailId(), employee.getPassword())) {
+				Employee loggedIn = employeeAdminService.getEmployeeDetails(employee.getEmailId());
+
+				if (loggedIn == null) {
+					model.addAttribute("errorMsg", "Employee not found");
+					model.addAttribute("employee", new Employee());
+					return "employee-login-page";
+				}
+
+				session.invalidate();
+				HttpSession newSession = request.getSession(true);
+
+				newSession.setAttribute("sessionEmployee", loggedIn);
+				newSession.setMaxInactiveInterval(30 * 60);
+
+				return "redirect:/employeeProfile";
+			} else {
+				model.addAttribute("errorMsg", "Incorrect Email or Password");
+				model.addAttribute("employee", new Employee());
+				return "employee-login-page";
+			}
+		} catch (Exception e) {
+			model.addAttribute("errorMsg", "Login failed. Please try again.");
+			model.addAttribute("employee", new Employee());
 			return "employee-login-page";
 		}
 	}
 
 	@GetMapping("/employeeProfile")
-	public String openProfilePage(@SessionAttribute("sessionEmployee") Employee loginEmployee, Model model) {
-		EmployeeProfileDTO profile = employeeAdminService.getEmployeeProfile(loginEmployee.getEmailId());
-		model.addAttribute("employeeProfile", profile);
-		return "employee-profile-page";
+	public String openProfilePage(HttpSession session, Model model) {
+		Employee loginEmployee = (Employee) session.getAttribute("sessionEmployee");
+		if (loginEmployee == null) {
+			return "redirect:/employeeLogin";
+		}
+
+		model.addAttribute("sessionEmployee", loginEmployee);
+
+		try {
+			EmployeeProfileDTO profile = employeeAdminService.getEmployeeProfile(loginEmployee.getEmailId());
+
+			if (profile == null) {
+				profile = new EmployeeProfileDTO(loginEmployee.getName() != null ? loginEmployee.getName() : "N/A",
+						loginEmployee.getEmailId() != null ? loginEmployee.getEmailId() : "N/A",
+						loginEmployee.getPhoneNo() != null ? loginEmployee.getPhoneNo() : "N/A",
+						loginEmployee.getCity() != null ? loginEmployee.getCity() : "N/A");
+			}
+
+			model.addAttribute("employeeProfile", profile);
+			return "employee-profile-page";
+		} catch (Exception e) {
+			e.printStackTrace();
+			EmployeeProfileDTO profile = new EmployeeProfileDTO(
+					loginEmployee.getName() != null ? loginEmployee.getName() : "N/A",
+					loginEmployee.getEmailId() != null ? loginEmployee.getEmailId() : "N/A",
+					loginEmployee.getPhoneNo() != null ? loginEmployee.getPhoneNo() : "N/A",
+					loginEmployee.getCity() != null ? loginEmployee.getCity() : "N/A");
+			model.addAttribute("employeeProfile", profile);
+			model.addAttribute("errorMsg", "Failed to load complete profile");
+			return "employee-profile-page";
+		}
 	}
 
 	@GetMapping("/employeeLogout")
-	public String employeeLogout(HttpSession session, SessionStatus status) {
-		status.setComplete();
+	public String employeeLogout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/employeeLogin";
 	}
 
-	// -------------open sell course page------------------------
 	@GetMapping("/sellCourse")
-	public String openSellCoursePage(Model model, @SessionAttribute("sessionEmployee") Employee employee) {
+	public String openSellCoursePage(Model model, HttpSession session) {
+		Employee employee = (Employee) session.getAttribute("sessionEmployee");
+		if (employee == null) {
+			return "redirect:/employeeLogin";
+		}
 
-		List<String> courseNameList = courseService.getAllCourseName();
-		model.addAttribute("courseNameList", courseNameList);
-
-		String uuiorderId = UUID.randomUUID().toString();
-		model.addAttribute("uuiorderId", uuiorderId);
-
-		model.addAttribute("orders", new Orders());
-
-		return "sell-course";
-	}
-
-	@PostMapping("/sellCourseFoem")
-	public String sellCourseFoem(@ModelAttribute("orders") Orders orders,
-			@SessionAttribute("sessionEmployee") Employee sessionEmployee, RedirectAttributes redirectAttributes) {
-
-		LocalDate ld = LocalDate.now();
-		String pdate = ld.format(DateTimeFormatter.ofPattern("dd//MM//yyyy"));
-
-		LocalTime lt = LocalTime.now();
-		String ptime = lt.format(DateTimeFormatter.ofPattern("hh:mm:ss a"));
-
-		String purchased_date_time = pdate + ", " + ptime;
-		orders.setDateofPurchase(purchased_date_time);
+		model.addAttribute("sessionEmployee", employee);
 
 		try {
+			List<String> courseNameList = courseService.getAllCourseName();
+			model.addAttribute("courseNameList", courseNameList);
+
+			String uuiorderId = UUID.randomUUID().toString();
+			model.addAttribute("uuiorderId", uuiorderId);
+
+			model.addAttribute("orders", new Orders());
+
+			return "sell-course";
+		} catch (Exception e) {
+			model.addAttribute("errorMsg", "Failed to load sell course page");
+			return "sell-course";
+		}
+	}
+
+	@PostMapping("/sellCourseForm")
+	public String sellCourseForm(@ModelAttribute("orders") Orders orders, HttpSession session,
+			RedirectAttributes redirectAttributes) {
+		Employee sessionEmployee = (Employee) session.getAttribute("sessionEmployee");
+		if (sessionEmployee == null) {
+			return "redirect:/employeeLogin";
+		}
+
+		try {
+			LocalDate ld = LocalDate.now();
+			String pdate = ld.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+			LocalTime lt = LocalTime.now();
+			String ptime = lt.format(DateTimeFormatter.ofPattern("hh:mm:ss a"));
+
+			String purchased_date_time = pdate + ", " + ptime;
+			orders.setDateofPurchase(purchased_date_time);
+
 			ordersService.storeUserOrders(orders);
 
 			EmployeeOrder employeeOrder = new EmployeeOrder();
@@ -114,21 +185,25 @@ public class EmployeeController {
 
 			employeeOrderRepository.save(employeeOrder);
 
-			redirectAttributes.addFlashAttribute("successMsg", "Course provided successfully..");
-
+			redirectAttributes.addFlashAttribute("successMsg", "Course sold successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("errorMsg", "Course not  provided due to some error...");
+			redirectAttributes.addFlashAttribute("errorMsg", "Failed to sell course. Please try again.");
 		}
 
 		return "redirect:/sellCourse";
 	}
 
-	// -------------Inquiry Management page------------------------
 	@GetMapping("/inquiryMangement")
-	public String openInquiryMangementPage(@SessionAttribute("sessionEmployee") Employee employee, Model model) {
+	public String openInquiryMangementPage(HttpSession session, Model model) {
+		Employee employee = (Employee) session.getAttribute("sessionEmployee");
+		if (employee == null) {
+			return "redirect:/employeeLogin";
+		}
+
+		model.addAttribute("sessionEmployee", employee);
+
 		model.addAttribute("inquiry", new Inquiry());
 		return "inquiry-mangement";
 	}
-
 }

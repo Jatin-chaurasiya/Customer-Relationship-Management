@@ -12,11 +12,10 @@ import in.sp.main.entities.Employee;
 @Repository
 public interface EmployeeAdminRepository extends JpaRepository<Employee, Long> {
 
-	Employee findByEmailId(String emailId); // For admin operations
+	Employee findByEmailId(String emailId);
 
-	// Native query to fetch only selected fields
-	String SELECT_QUERY = "SELECT name, email_id, phone_no, city FROM employee WHERE email_id = :email";
+	boolean existsByEmailId(String emailId);
 
-	@Query(value = SELECT_QUERY, nativeQuery = true)
+	@Query(value = "SELECT name, email_id, phone_no, city FROM employee WHERE email_id = :email", nativeQuery = true)
 	List<Object[]> findEmployeeProfileByEmail(@Param("email") String email);
 }

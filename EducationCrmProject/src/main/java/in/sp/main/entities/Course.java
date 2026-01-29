@@ -12,18 +12,27 @@ public class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(unique = true, nullable = false)
+
+	@Column(unique = true, nullable = false, length = 100)
 	private String name;
-	@Column
+
+	@Column(length = 1000)
 	private String description;
-	@Column
+
+	@Column(length = 20)
 	private String originalPrice;
-	@Column
+
+	@Column(length = 20)
 	private String discountedPrice;
-	@Column
+
+	@Column(length = 50)
 	private String updateOn;
-	@Column
-	private String ImageUrl;
+
+	@Column(length = 500)
+	private String imageUrl;
+
+	public Course() {
+	}
 
 	public Long getId() {
 		return id;
@@ -74,11 +83,10 @@ public class Course {
 	}
 
 	public String getImageUrl() {
-		return ImageUrl;
+		return imageUrl;
 	}
 
 	public void setImageUrl(String imageUrl) {
-		ImageUrl = imageUrl;
+		this.imageUrl = imageUrl;
 	}
-
 }

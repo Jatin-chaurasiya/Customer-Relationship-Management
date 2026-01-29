@@ -30,7 +30,6 @@ public class OrdersChartController {
 
 		model.addAttribute("admin", admin);
 
-		// -------graph 3------------------
 		List<Object[]> listOfCoursesSoldPerDay = ordersChartService.findCoursesSoldPerDay();
 
 		List<String> dates1 = new ArrayList<>();
@@ -58,7 +57,6 @@ public class OrdersChartController {
 		model.addAttribute("coursename1", coursename1);
 		model.addAttribute("coursecount1", coursecount1);
 
-		// ---------graph 1------------------
 		List<Object[]> listOfCoursesAmountSales = ordersChartService.findCoursesAmountTotalSales();
 
 		List<String> date11 = new ArrayList<>();

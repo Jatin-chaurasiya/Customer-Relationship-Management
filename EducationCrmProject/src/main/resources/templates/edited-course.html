@@ -1,95 +1,252 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Admin Profile</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<link rel="stylesheet" th:href='@{/css/style.css}' />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Edit Course - Admin Panel</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/admin-layout.css}" />
 </head>
 
 <body>
-	<!--Sidebar-->
+	<!-- Sidebar -->
 	<div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
-	<!--End of Sidebar-->
 
-	<!--Content-->
+	<!-- Main Content -->
 	<div class="content">
-		<h2>Course Management</h2>
-		<p>Add Course Below...</p>
+		<div class="container-fluid">
+			<!-- Header with Back Button -->
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<div>
+					<h2>
+						<i class="bi bi-pencil-square text-warning"></i> 
+						Edit Course
+					</h2>
+					<p class="text-muted mb-0">Update course information</p>
+				</div>
+				<a href="/courseMangement" class="btn btn-secondary">
+					<i class="bi bi-arrow-left"></i> Back to Courses
+				</a>
+			</div>
 
-		<section class="mt-5">
-			<h3 class="text-center">Edit Course</h3>
-			<div class="row justify-content-center">
-				<div class="card shadow p-5" style="width: 40%">
+			<!-- Form Section -->
+			<section class="mt-4">
+				<div class="row justify-content-center">
+					<div class="col-lg-8 col-md-10">
+						<div class="card shadow">
+							<div class="card-header bg-warning text-white">
+								<h5 class="mb-0">
+									<i class="bi bi-book-fill"></i> Course Details
+								</h5>
+							</div>
+							<div class="card-body p-4">
+								<form th:action="@{/updateCourseDetailsForm}" 
+								      method="post" 
+								      th:object="${newCourseObj}" 
+								      enctype="multipart/form-data">
 
+									<!-- Course Name (Readonly) -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-bookmark text-primary"></i> Course Name
+										</label>
+										<input type="text" 
+										       class="form-control bg-light" 
+										       name="name" 
+										       th:value="${course.name}" 
+										       readonly />
+										<small class="text-muted">Course name cannot be changed</small>
+									</div>
 
-					<form th:action="@{/updateCourseDetailsForm}" method="post" th:object="${newCourseObj}" enctype="multipart/form-data">
+									<!-- Course Description -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-card-text text-primary"></i> Course Description
+											<span class="text-danger">*</span>
+										</label>
+										<textarea class="form-control" 
+										          name="description" 
+										          th:text="${course.description}" 
+										          rows="4"
+										          placeholder="Enter course description" 
+										          required
+										          minlength="10"
+										          maxlength="1000"></textarea>
+										<small class="text-muted">Minimum 10 characters, maximum 1000</small>
+									</div>
 
-						<div class="mb-3">
-							<label class="form-label">Course Name:</label> <input type="text"
-								class="form-control" name="name" th:value="${course.name}"
-								placeholder="Enter course name" readonly />
-						</div>
+									<!-- Prices Row -->
+									<div class="row">
+										<div class="col-md-6">
+											<div class="mb-3">
+												<label class="form-label fw-bold">
+													<i class="bi bi-currency-rupee text-primary"></i> Original Price
+													<span class="text-danger">*</span>
+												</label>
+												<input type="number" 
+												       class="form-control" 
+												       name="originalPrice" 
+												       th:value="${course.originalPrice}" 
+												       placeholder="₹0" 
+												       required 
+												       min="0"
+												       step="1" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="mb-3">
+												<label class="form-label fw-bold">
+													<i class="bi bi-tag text-success"></i> Discounted Price
+													<span class="text-danger">*</span>
+												</label>
+												<input type="number" 
+												       class="form-control" 
+												       name="discountedPrice" 
+												       th:value="${course.discountedPrice}" 
+												       placeholder="₹0" 
+												       required 
+												       min="0"
+												       step="1" />
+											</div>
+										</div>
+									</div>
 
-						<div class="mb-3">
-							<label class="form-label">Course Description:</label>
-							<textarea class="form-control" name="description"
-								th:text="${course.description}"
-								placeholder="Enter course description" required></textarea>
-						</div>
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-calendar-event text-primary"></i> Last Updated On
+											<span class="text-danger">*</span>
+										</label>
+										<input type="date" 
+										       class="form-control" 
+										       name="updateOn" 
+										       th:value="${course.updateOn}" 
+										       required />
+									</div>
 
-						<div class="mb-3">
-							<label class="form-label">Course Original Price:</label> <input
-								type="text" class="form-control" name="originalPrice"
-								th:value="${course.originalPrice}"
-								placeholder="Enter original price" required />
-						</div>
+									<!-- Course Image -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-image text-primary"></i> Course Image
+										</label>
+										
+										<!-- Current Image Preview -->
+										<div class="mb-3">
+											<p class="text-muted mb-2">Current Image:</p>
+											<img th:if="${course.imageUrl != null && !course.imageUrl.isEmpty()}" 
+											     th:src="@{${course.imageUrl}}" 
+											     alt="Course Image" 
+											     class="img-thumbnail" 
+											     width="200"
+											     style="max-height: 150px; object-fit: cover;" />
+											<span th:unless="${course.imageUrl != null && !course.imageUrl.isEmpty()}" 
+											      class="text-muted">
+												<i class="bi bi-image"></i> No image available
+											</span>
+										</div>
 
-						<div class="mb-3">
-							<label class="form-label">Course Discounted Price:</label> <input
-								type="text" class="form-control" name="discountedPrice"
-								th:value="${course.discountedPrice}"
-								placeholder="Enter discounted price" required />
-						</div>
+										<!-- Upload New Image -->
+										<div>
+											<label class="form-label text-muted">Upload New Image (Optional):</label>
+											<input type="file" 
+											       class="form-control" 
+											       name="courseImg" 
+											       accept="image/jpeg,image/jpg,image/png,image/gif" />
+											<small class="text-muted">
+												Accepted formats: JPG, JPEG, PNG, GIF (Max 5MB)
+											</small>
+										</div>
+									</div>
 
-						<div class="mb-3">
-							<label class="form-label">Course Updated On:</label> <input
-								type="text" class="form-control" name="updateOn"
-								th:value="${course.updateOn}" placeholder="Enter update date"
-								required />
-						</div>
+									<!-- Required Fields Note -->
+									<div class="alert alert-info" role="alert">
+										<i class="bi bi-info-circle-fill"></i>
+										<strong>Note:</strong> Fields marked with <span class="text-danger">*</span> are required. 
+										If you don't upload a new image, the current image will be retained.
+									</div>
 
-						<div class="mb-3">
-							<label class="form-label">Course Image:</label>
-							<div class="d-flex align-items-center">
-								<img th:src="@{${course.imageUrl}}" alt="Course Image"
-									width="150" class="me-3"/> 
-									<input type="file" class="form-control"
-									name="courseImg" />
+									<!-- Buttons -->
+									<div class="d-flex gap-2">
+										<button type="submit" class="btn btn-warning text-white">
+											<i class="bi bi-check-circle"></i> Update Course
+										</button>
+										<a href="/courseMangement" class="btn btn-outline-secondary">
+											<i class="bi bi-x-circle"></i> Cancel
+										</a>
+									</div>
+								</form>
 							</div>
 						</div>
-
-						<button type="submit" class="btn btn-primary">Update Course Details</button>
-					</form>
-
-
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+		</div>
 	</div>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-		crossorigin="anonymous"></script>
-</body>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<!-- Form Validation & Image Preview -->
+	<script>
+		// Form validation
+		(function() {
+			'use strict';
+			const forms = document.querySelectorAll('form');
+			Array.from(forms).forEach(form => {
+				form.addEventListener('submit', event => {
+					if (!form.checkValidity()) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
+					form.classList.add('was-validated');
+				}, false);
+			});
+		})();
 
+		// Image preview on file select
+		const fileInput = document.querySelector('input[type="file"]');
+		if (fileInput) {
+			fileInput.addEventListener('change', function(e) {
+				const file = e.target.files[0];
+				if (file) {
+					// File size validation (5MB)
+					if (file.size > 5 * 1024 * 1024) {
+						alert('File size must be less than 5MB');
+						this.value = '';
+						return;
+					}
+					
+					// Show preview
+					const reader = new FileReader();
+					reader.onload = function(event) {
+						const currentImg = document.querySelector('.img-thumbnail');
+						if (currentImg) {
+							currentImg.src = event.target.result;
+						}
+					};
+					reader.readAsDataURL(file);
+				}
+			});
+		}
+
+		// Price validation - discounted should be less than original
+		const originalPriceInput = document.querySelector('input[name="originalPrice"]');
+		const discountedPriceInput = document.querySelector('input[name="discountedPrice"]');
+		
+		if (originalPriceInput && discountedPriceInput) {
+			function validatePrices() {
+				const original = parseFloat(originalPriceInput.value) || 0;
+				const discounted = parseFloat(discountedPriceInput.value) || 0;
+				
+				if (discounted > original) {
+					discountedPriceInput.setCustomValidity('Discounted price must be less than or equal to original price');
+				} else {
+					discountedPriceInput.setCustomValidity('');
+				}
+			}
+			
+			originalPriceInput.addEventListener('input', validatePrices);
+			discountedPriceInput.addEventListener('input', validatePrices);
+		}
+	</script>
+</body>
 </html>

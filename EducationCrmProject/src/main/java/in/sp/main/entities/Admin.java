@@ -12,10 +12,22 @@ public class Admin {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+
+	@Column(nullable = false, unique = true, length = 100)
 	private String email;
-	@Column
-	private String password;
+
+	@Column(nullable = false, length = 255)
+	private String password; // Store hashed password
+
+	// Default constructor
+	public Admin() {
+	}
+
+	// Constructor with parameters
+	public Admin(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
 
 	public Long getId() {
 		return id;
@@ -40,5 +52,4 @@ public class Admin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 }

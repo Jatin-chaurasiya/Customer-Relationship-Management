@@ -13,12 +13,24 @@ public class AdminService {
 	private AdminRepository adminRepository;
 
 	public boolean adminLoginService(String email, String password) {
-		Admin admin = adminRepository.findByEmail(email);
+
+		if (email == null || email.trim().isEmpty() || password == null || password.isEmpty()) {
+			return false;
+		}
+
+		Admin admin = adminRepository.findByEmail(email.trim().toLowerCase()); // ✅ Direct call
 
 		if (admin == null) {
-			return false; // no such email
+			return false;
 		}
 
 		return password.equals(admin.getPassword());
+	}
+
+	public boolean isEmailExists(String email) {
+		if (email == null || email.trim().isEmpty()) {
+			return false;
+		}
+		return adminRepository.existsByEmail(email.trim().toLowerCase());
 	}
 }

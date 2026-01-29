@@ -1,76 +1,132 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sales Information</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-<link rel="stylesheet" th:href='@{/css/style.css}' />
-<link rel="stylesheet" th:href='@{/css/style2.css}' />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sales Information - Admin Panel</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/admin-layout.css}" />
 </head>
 
 <body>
-	<!--Sidebar-->
+	<!-- Sidebar -->
 	<div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
-	<!--End of Sidebar-->
-	<!--Content-->
+
+	<!-- Main Content -->
 	<div class="content">
-		<h2>Sales Information</h2>
-		<p>Below are the details of total sales and individual sales by
-			employee</p>
-      <div class="adminContainer">
-		<section class="mt-5">
-  <h3 class="text-center">Sales Information</h3>
-  <div class="row justify-content-center">
-    <div class="card shadow p-5" style="width: 80%">
-      
-      <!-- Total Sales Summary (separate from table) -->
-      <div class="mb-4">
-        <h4 th:text="'Total sales by all Employee : Rs. ' + ${totalSales}"></h4>
-      </div>
+		<div class="container-fluid">
+			<!-- Header -->
+			<div class="mb-4">
+				<h2>
+					<i class="bi bi-graph-up-arrow text-success"></i> 
+					Sales Information
+				</h2>
+				<p class="text-muted mb-0">View total sales and employee performance</p>
+			</div>
 
-      <!-- Employee Sales Table -->
-      <table
-        class="table table-bordered table-striped table-hover align-middle text-center">
-        <thead class="table-primary">
-          <tr>
-            <th scope="col">Employee Name</th>
-            <th scope="col">Employee Email</th>
-            <th scope="col">Employee Phone No.</th>
-            <th scope="col">Total Sales</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="list : ${salesList}">
-            <td th:text="${list[0]}"></td>
-            <td th:text="${list[1]}"></td>
-            <td th:text="${list[2]}"></td>
-            <td th:text="'Rs.' + ${list[3]}"></td>
-          </tr>
-        </tbody>
-      </table>
+			<div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show" role="alert">
+				<i class="bi bi-exclamation-triangle-fill"></i>
+				<span th:text="${errorMsg}"></span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
 
-    </div>
-  </div>
-</section>
-		
+			<section class="mt-4">
+				<div class="card shadow mb-4">
+					<div class="card-header bg-success text-white">
+						<h5 class="mb-0">
+							<i class="bi bi-currency-rupee"></i> Total Sales Summary
+						</h5>
+					</div>
+					<div class="card-body text-center py-4">
+						<h1 class="display-4 text-success fw-bold">
+							₹ <span th:text="${totalSales != null ? totalSales : '0'}">0</span>
+						</h1>
+						<p class="text-muted mb-0">Total Revenue Generated</p>
+					</div>
+				</div>
+			</section>
+
+			<section class="mt-4">
+				<div class="card shadow">
+					<div class="card-header bg-primary text-white">
+						<h5 class="mb-0">
+							<i class="bi bi-people-fill"></i> Employee Sales Performance
+						</h5>
+					</div>
+					<div class="card-body p-0">
+						<div th:if="${salesList == null || salesList.isEmpty()}" class="text-center py-5 px-3">
+							<i class="bi bi-receipt" style="font-size: 4rem; color: #ccc;"></i>
+							<h4 class="mt-3 text-muted">No Sales Data Available</h4>
+							<p class="text-muted">Employee sales data will appear here once orders are placed</p>
+						</div>
+
+						<div th:if="${salesList != null && !salesList.isEmpty()}">
+							<div class="table-responsive">
+								<table class="table table-striped table-hover table-bordered mb-0">
+									<thead class="table-dark">
+										<tr>
+											<th scope="col">Employee Name</th>
+											<th scope="col">Email</th>
+											<th scope="col">Phone Number</th>
+											<th scope="col" class="text-end">Total Sales</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="sale : ${salesList}">
+											<td>
+												<i class="bi bi-person-fill text-primary"></i>
+												<strong th:text="${sale[0] != null ? sale[0] : '-'}">Name</strong>
+											</td>
+											
+											<td>
+												<i class="bi bi-envelope text-primary"></i>
+												<span th:text="${sale[1] != null ? sale[1] : '-'}">Email</span>
+											</td>
+											
+											<td>
+												<i class="bi bi-telephone text-primary"></i>
+												<span th:text="${sale[2] != null ? sale[2] : '-'}">Phone</span>
+											</td>
+											
+											<td class="text-end">
+												<strong class="text-success">
+													₹ <span th:text="${sale[3] != null ? sale[3] : '0'}">0</span>
+												</strong>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot class="table-light">
+										<tr>
+											<td colspan="3" class="text-end fw-bold">Grand Total:</td>
+											<td class="text-end">
+												<strong class="text-success fs-5">
+													₹ <span th:text="${totalSales != null ? totalSales : '0'}">0</span>
+												</strong>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
 		</div>
 	</div>
 
-
-
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<script>
+		setTimeout(function() {
+			const alerts = document.querySelectorAll('.alert');
+			alerts.forEach(function(alert) {
+				if (alert) {
+					const bsAlert = new bootstrap.Alert(alert);
+					bsAlert.close();
+				}
+			});
+		}, 5000);
+	</script>
 </body>
-
 </html>

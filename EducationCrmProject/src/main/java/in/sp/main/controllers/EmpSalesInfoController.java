@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import in.sp.main.entities.Admin;
 import in.sp.main.services.EmpSalesService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class EmpSalesInfoController {
@@ -16,16 +18,26 @@ public class EmpSalesInfoController {
 	private EmpSalesService empSalesService;
 
 	@GetMapping("/sale")
-	public String opneSalesPage(Model model) {
+	public String openSalesPage(Model model, HttpSession session) {
 
-		String totalSales = empSalesService.findTotalSalesByAllEmployee();
-		model.addAttribute("totalSales", totalSales);
+		Admin admin = (Admin) session.getAttribute("sessionAdmin");
+		if (admin == null) {
+			return "redirect:/adminLogin";
+		}
 
-		List<Object[]> salesList = empSalesService.findTotalSalesByEachEmployee();
-		model.addAttribute("salesList", salesList);
+		try {
+			String totalSales = empSalesService.findTotalSalesByAllEmployee();
+			model.addAttribute("totalSales", totalSales);
 
-		return "sales";
+			List<Object[]> salesList = empSalesService.findTotalSalesByEachEmployee();
+			model.addAttribute("salesList", salesList);
 
+			return "sales";
+		} catch (Exception e) {
+			model.addAttribute("errorMsg", "Failed to load sales information");
+			model.addAttribute("totalSales", "0");
+			model.addAttribute("salesList", List.of());
+			return "sales";
+		}
 	}
-
 }

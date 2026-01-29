@@ -1,80 +1,225 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sell Course</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-	crossorigin="anonymous">
-
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-<link rel="stylesheet" th:href="@{/css/style.css}" />
-
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sell Course - Employee Panel</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/Employee-layout.css}" />
 </head>
 
 <body>
-
 	<!-- Sidebar -->
 	<div th:replace="~{fragments/employee-sidebar :: employee-sidebar}"></div>
 
+	<!-- Main Content -->
 	<div class="content">
-		<h2>Sell Course</h2>
-		<p>Provide proper details to sell course</p>
-
-		<section class="mt-5">
-			<h3 class="text-center">Sell Course</h3>
-
-			<div class="row justify-content-center">
-				<div class="card shadow p-5" style="width: 40%">
-
-					<!-- Include fragment -->
-					<div th:replace="~{fragments/SuccessandError :: SuccessandError}"></div>
-
-					<form th:action="@{/sellCourseFoem}" method="POST"
-						th:object="${orders}">
-						<div class="mb-3">
-							<label class="form-label">Course Name : </label> <select
-								name="courseName" class="form-control" required>
-								<option value="" selected Disabled>Select Course</option>
-								<option th:each="courseName : ${courseNameList}"
-									th:value="${courseName}" th:text="${courseName}"></option>
-							</select>
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Course Amount : </label> <input
-								name="courseAmount" type="text" class="form-control" required />
-						</div>
-						<div class="mb-3">
-							<label class="form-label">User Email Id : </label> <input
-								name="userEmail" type="email" class="form-control" required />
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Transaction Id : </label> <input
-								name="paymentId" type="text" class="form-control" required />
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Order Id : </label> <input
-								name="orderId" type="text" class="form-control"
-								th:value="${uuiorderId}" readonly />
-						</div>
-						<button type="submit" class="btn btn-primary">Sell Course</button>
-					</form>
+		<div class="container-fluid">
+			<!-- Header with Back Button -->
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<div>
+					<h2>
+						<i class="bi bi-cart-plus-fill text-success"></i> 
+						Sell Course
+					</h2>
+					<p class="text-muted mb-0">Provide course details to complete the sale</p>
 				</div>
+				<a href="/employeeProfile" class="btn btn-secondary">
+					<i class="bi bi-arrow-left"></i> Back to Dashboard
+				</a>
 			</div>
-		</section>
 
+			<!-- Form Section -->
+			<section class="mt-4">
+				<div class="row justify-content-center">
+					<div class="col-lg-8 col-md-10">
+						<div class="card shadow">
+							<div class="card-header bg-success text-white">
+								<h5 class="mb-0">
+									<i class="bi bi-bag-check-fill"></i> Course Sale Information
+								</h5>
+							</div>
+							<div class="card-body p-4">
+								<!-- Success/Error Messages -->
+								<div th:replace="~{fragments/SuccessandError :: SuccessandError}"></div>
+
+								<form th:action="@{/sellCourseForm}" 
+								      method="post" 
+								      th:object="${orders}"
+								      id="sellCourseForm">
+
+									<!-- Course Name -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-book text-primary"></i> Course Name
+											<span class="text-danger">*</span>
+										</label>
+										<select name="courseName" 
+										        class="form-control form-select" 
+										        required>
+											<option value="" selected disabled>Select Course</option>
+											<option th:each="courseName : ${courseNameList}" 
+											        th:value="${courseName}" 
+											        th:text="${courseName}">Course</option>
+										</select>
+										<small class="text-muted">Choose the course to sell</small>
+									</div>
+
+									<!-- Course Amount -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-currency-rupee text-primary"></i> Course Amount
+											<span class="text-danger">*</span>
+										</label>
+										<div class="input-group">
+											<span class="input-group-text">₹</span>
+											<input type="number" 
+											       name="courseAmount" 
+											       class="form-control" 
+											       placeholder="Enter course amount" 
+											       required 
+											       min="0"
+											       step="1" />
+										</div>
+										<small class="text-muted">Enter the selling price</small>
+									</div>
+
+									<!-- User Email -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-envelope text-primary"></i> Customer Email
+											<span class="text-danger">*</span>
+										</label>
+										<input type="email" 
+										       name="userEmail" 
+										       class="form-control" 
+										       placeholder="customer@example.com" 
+										       required 
+										       maxlength="100" />
+										<small class="text-muted">Customer's email address</small>
+									</div>
+
+									<!-- Transaction ID -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-credit-card text-primary"></i> Transaction ID
+											<span class="text-danger">*</span>
+										</label>
+										<input type="text" 
+										       name="paymentId" 
+										       class="form-control" 
+										       placeholder="Enter transaction/payment ID" 
+										       required 
+										       minlength="5"
+										       maxlength="100" />
+										<small class="text-muted">Payment gateway transaction ID</small>
+									</div>
+
+									<!-- Order ID (Read-only) -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-receipt text-primary"></i> Order ID
+										</label>
+										<input type="text" 
+										       name="orderId" 
+										       class="form-control bg-light" 
+										       th:value="${uuiorderId}" 
+										       readonly />
+										<small class="text-muted">Auto-generated unique order identifier</small>
+									</div>
+
+									<!-- Required Fields Note -->
+									<div class="alert alert-info" role="alert">
+										<i class="bi bi-info-circle-fill"></i>
+										<strong>Note:</strong> All fields marked with <span class="text-danger">*</span> are required. 
+										Please verify all details before submitting.
+									</div>
+
+									<!-- Buttons -->
+									<div class="d-flex gap-2">
+										<button type="submit" class="btn btn-success">
+											<i class="bi bi-check-circle"></i> Complete Sale
+										</button>
+										<button type="reset" class="btn btn-outline-warning">
+											<i class="bi bi-arrow-clockwise"></i> Reset Form
+										</button>
+										<a href="/employeeProfile" class="btn btn-outline-secondary">
+											<i class="bi bi-x-circle"></i> Cancel
+										</a>
+									</div>
+								</form>
+							</div>
+						</div>
+
+						<!-- Quick Tips Card -->
+						<div class="card shadow mt-4">
+							<div class="card-header bg-light">
+								<h6 class="mb-0">
+									<i class="bi bi-lightbulb text-warning"></i> Quick Tips
+								</h6>
+							</div>
+							<div class="card-body">
+								<ul class="mb-0">
+									<li>Verify customer email before processing</li>
+									<li>Ensure transaction ID matches payment gateway</li>
+									<li>Double-check the course name and amount</li>
+									<li>Keep order ID for future reference</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
 	</div>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-		crossorigin="anonymous"></script>
-</body>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<!-- Form Validation & Features -->
+	<script>
+		// Form validation
+		(function() {
+			'use strict';
+			const form = document.getElementById('sellCourseForm');
+			form.addEventListener('submit', event => {
+				if (!form.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
+				form.classList.add('was-validated');
+			}, false);
+		})();
 
+		// Auto-hide success/error messages after 5 seconds
+		setTimeout(function() {
+			const alerts = document.querySelectorAll('.alert-success, .alert-danger');
+			alerts.forEach(function(alert) {
+				if (alert && !alert.classList.contains('alert-info')) {
+					const bsAlert = new bootstrap.Alert(alert);
+					bsAlert.close();
+				}
+			});
+		}, 5000);
+
+		// Email validation helper
+		const emailInput = document.querySelector('input[name="userEmail"]');
+		if (emailInput) {
+			emailInput.addEventListener('blur', function() {
+				const email = this.value.trim().toLowerCase();
+				this.value = email;
+			});
+		}
+
+		// Amount validation - positive numbers only
+		const amountInput = document.querySelector('input[name="courseAmount"]');
+		if (amountInput) {
+			amountInput.addEventListener('input', function() {
+				if (this.value < 0) {
+					this.value = 0;
+				}
+			});
+		}
+	</script>
+</body>
 </html>

@@ -57,7 +57,6 @@ public class UserController {
 		return "index";
 	}
 
-//	registration start
 	@GetMapping("/register")
 	public String openRegisterPage(Model model) {
 		model.addAttribute("user", new User());
@@ -71,10 +70,7 @@ public class UserController {
 		model.addAttribute("successMsg", "Registration Successful! Please login now.");
 
 		return "register";
-		// OR return "redirect:/login";
 	}
-
-//		login start
 
 	@GetMapping("/login")
 	public String openLoginPage(Model model) {
@@ -101,9 +97,6 @@ public class UserController {
 			return "login";
 		}
 	}
-//login ends
-
-//	logout
 
 	@GetMapping("/logout")
 	public String logoutService(SessionStatus sessionStatus) {
@@ -112,8 +105,7 @@ public class UserController {
 	}
 
 	@GetMapping("/userProfile")
-	public String openUserProfile() {
-
+	public String openUserProfile(@SessionAttribute("sessionUser") User sessionUser) {
 		return "std-profile";
 	}
 

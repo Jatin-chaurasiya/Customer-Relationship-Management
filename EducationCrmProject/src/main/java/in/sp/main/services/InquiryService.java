@@ -15,11 +15,26 @@ public class InquiryService {
 	private InquiryRespository inquiryRespository;
 
 	public void addNewInquiry(Inquiry inquiry) {
+		// Validation
+		if (inquiry == null) {
+			throw new IllegalArgumentException("Inquiry cannot be null");
+		}
+
+		if (inquiry.getPhoneno() == null || inquiry.getPhoneno().trim().isEmpty()) {
+			throw new IllegalArgumentException("Phone number is required");
+		}
+
+		if (inquiry.getName() == null || inquiry.getName().trim().isEmpty()) {
+			throw new IllegalArgumentException("Customer name is required");
+		}
+
 		inquiryRespository.save(inquiry);
 	}
 
 	public List<Inquiry> findInquiresByPhoneno(String phoneno) {
-		return inquiryRespository.findByPhoneno(phoneno);
+		if (phoneno == null || phoneno.trim().isEmpty()) {
+			return List.of(); // Empty list
+		}
+		return inquiryRespository.findByPhoneno(phoneno.trim());
 	}
-
 }

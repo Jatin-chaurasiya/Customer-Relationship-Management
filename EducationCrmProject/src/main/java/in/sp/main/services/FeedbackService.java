@@ -10,11 +10,25 @@ import in.sp.main.repositories.FeedbackRepository;
 
 @Service
 public class FeedbackService {
-
 	@Autowired
 	private FeedbackRepository feedbackRepository;
 
 	public void sendFeedback(Feedback feedback) {
+		if (feedback == null) {
+			throw new IllegalArgumentException("Feedback cannot be null");
+		}
+
+		if (feedback.getUserName() == null || feedback.getUserName().trim().isEmpty()) {
+			throw new IllegalArgumentException("Name is required");
+		}
+
+		if (feedback.getUserEmail() == null || feedback.getUserEmail().trim().isEmpty()) {
+			throw new IllegalArgumentException("Email is required");
+		}
+
+		if (feedback.getUserFeedback() == null || feedback.getUserFeedback().trim().isEmpty()) {
+			throw new IllegalArgumentException("Feedback message is required");
+		}
 		feedbackRepository.save(feedback);
 	}
 
@@ -23,15 +37,15 @@ public class FeedbackService {
 	}
 
 	public boolean updateFeedbackStatus(Long id, String status) {
-
+		if (id == null || status == null || status.trim().isEmpty()) {
+			return false;
+		}
 		Feedback feedback = feedbackRepository.findById(id).orElse(null);
-
 		if (feedback != null) {
-			feedback.setReadStatus(status);
+			feedback.setReadStatus(status.trim().toLowerCase());
 			feedbackRepository.save(feedback);
 			return true;
 		}
-
 		return false;
 	}
 }

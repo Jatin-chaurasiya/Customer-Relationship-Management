@@ -22,47 +22,72 @@ public class EmployeeAdminService {
 	}
 
 	public void addEmployee(Employee employee) {
+		if (employee == null || employee.getEmailId() == null || employee.getEmailId().trim().isEmpty()) {
+			throw new IllegalArgumentException("Employee email is required");
+		}
+
+		if (employeeRepository.existsByEmailId(employee.getEmailId().trim())) {
+			throw new IllegalArgumentException("Employee already exists with this email");
+		}
+
+		if (employee.getName() == null || employee.getName().trim().isEmpty()) {
+			throw new IllegalArgumentException("Employee name is required");
+		}
+
+		if (employee.getPassword() == null || employee.getPassword().isEmpty()) {
+			throw new IllegalArgumentException("Password is required");
+		}
+
 		employeeRepository.save(employee);
 	}
 
 	public Employee getEmployeeDetails(String employeeEmail) {
-		return employeeRepository.findByEmailId(employeeEmail);
+		if (employeeEmail == null || employeeEmail.trim().isEmpty()) {
+			return null;
+		}
+		return employeeRepository.findByEmailId(employeeEmail.trim());
 	}
 
 	public Page<Employee> getEmployeeDetailsByPagination(Pageable pageable) {
 		return employeeRepository.findAll(pageable);
 	}
 
-	public void updateCourseDetails(Employee employee) {
+	public void updateEmployeeDetails(Employee employee) {
+		if (employee == null || employee.getId() == null) {
+			throw new IllegalArgumentException("Invalid employee data");
+		}
 		employeeRepository.save(employee);
 	}
 
 	public void deleteEmployeeDetails(String employeeEmail) {
-		Employee employee = employeeRepository.findByEmailId(employeeEmail);
+		if (employeeEmail == null || employeeEmail.trim().isEmpty()) {
+			throw new IllegalArgumentException("Employee email is required");
+		}
+
+		Employee employee = employeeRepository.findByEmailId(employeeEmail.trim());
 		if (employee != null) {
 			employeeRepository.delete(employee);
 		} else {
-			throw new RuntimeException("Employee not found with email : " + employeeEmail);
+			throw new RuntimeException("Employee not found with email: " + employeeEmail);
 		}
 	}
 
-	// --- For Employee login/profile ---
 	public EmployeeProfileDTO getEmployeeProfile(String email) {
 		List<Object[]> result = employeeRepository.findEmployeeProfileByEmail(email);
-		if (result.isEmpty())
+		if (result.isEmpty()) {
 			return null;
+		}
 
 		Object[] row = result.get(0);
-		return new EmployeeProfileDTO((String) row[0], // name
-				(String) row[1], // email_id
-				(String) row[2], // phone_no
-				(String) row[3] // city
-		);
+		return new EmployeeProfileDTO((String) row[0], (String) row[1], (String) row[2], (String) row[3]);
 	}
 
-	// --- Login check ---
 	public boolean login(String email, String password) {
-		Employee employee = employeeRepository.findByEmailId(email);
+		if (email == null || email.trim().isEmpty() || password == null || password.isEmpty()) {
+			return false;
+		}
+
+		Employee employee = employeeRepository.findByEmailId(email.trim());
 		return employee != null && employee.getPassword().equals(password);
 	}
 }

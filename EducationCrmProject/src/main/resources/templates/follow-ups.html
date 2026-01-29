@@ -1,139 +1,220 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Follow-Ups</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-<link rel="stylesheet" th:href='@{/css/style.css}' />
-<style>
-#noFollowUpsTittle, #followUpsTable, #inquiryDetailsSection {
-	display: none;
-}
-</style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Follow-Ups - Employee Panel</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/Employee-layout.css}" />
 </head>
 
 <body>
-
 	<!-- Sidebar -->
 	<div th:replace="~{fragments/employee-sidebar :: employee-sidebar}"></div>
-	<!--End of Sidebar-->
-	<!--Content-->
+
 	<div class="content">
-		<h2>Follow Ups</h2>
-		<p>Below are the followUps list,Please handle the customers
-			carefully..</p>
+		<div class="container-fluid">
+			<!-- Header -->
+			<div class="mb-4">
+				<h2>
+					<i class="bi bi-calendar-check text-warning"></i> 
+					Follow-Ups
+				</h2>
+				<p class="text-muted mb-0">Manage customer follow-up reminders</p>
+			</div>
 
-		<section class="mt-5">
-
-			<div th:if="${successMsg}"
-				class="mb-3 alert alert-success alert-dismissible fade show text-center"
-				role="alert">
+			<!-- Success Message -->
+			<div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show" role="alert">
+				<i class="bi bi-check-circle-fill"></i>
 				<span th:text="${successMsg}"></span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 			</div>
 
-			<div class="row justify-content-center">
-				<div class="card shadow p-5" style="width: 60%">
-					<div class="mb-3">
-						<label class="form-label">Select Follow Up Date:</label> <input
-							type="hidden" id="sessionempEmail"
-							th:value="${sessionEmployee.emailId}" /> <input type="date"
-							id="followUpDate" class="form-control" />
+			<section class="mb-4">
+				<div class="card shadow">
+					<div class="card-header bg-warning text-white">
+						<h5 class="mb-0">
+							<i class="bi bi-calendar-event"></i> Select Follow-Up Date
+						</h5>
 					</div>
-					<h3 id="noFollowUpsTittle" class="text-danger mt-4">Sorry, No
-						follow-Ups found..!!</h3>
-					<table id="followUpsTable"
-						class="table table-striped table-hover table-bordered shadow mt-4">
-						<thead>
-							<tr>
-								<th>Customer Phone Number</th>
-								<th>See More</th>
-							</tr>
-						</thead>
-						<tbody id="followUpTableBody">
-
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</section>
-
-		<section class="mt-5" id="inquiryDetailsSection">
-			<div class="row justify-content-center">
-				<div class="card shadow p-5" style="width: 100%">
-					<h5 class="text-center text-primary">Discussion Details</h5>
-					<h4 id="customerNameId" class="mt-4 text-info"></h4>
-					<table
-						class="table table-striped table-hover table-bordered shadow">
-						<thead>
-							<tr>
-								<th>Customer Name</th>
-								<th>interested Course</th>
-								<th>Discussion</th>
-								<th>Inquiry Type</th>
-								<th>Call Type</th>
-								<th>Date of Inquiry</th>
-								<th>Time of Inquiry</th>
-							</tr>
-						</thead>
-						<tbody id="inquiryTableBody">
-
-						</tbody>
-					</table>
-					<button id="addNewDiscussion" class="btn btn-primary">Add
-						New Discussion</button>
-				</div>
-			</div>
-		</section>
-
-		<div class="modal fade" id="inquiryModal" tabindex="-1"
-			aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Continue
-							Inquiry</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
+					<div class="card-body p-4">
+						<div class="row align-items-center">
+							<div class="col-md-8">
+								<input type="hidden" id="sessionempEmail" th:value="${sessionEmployee.emailId}" />
+								<div class="input-group">
+									<span class="input-group-text">
+										<i class="bi bi-calendar3"></i>
+									</span>
+									<input type="date" id="followUpDate" class="form-control" />
+									<button class="btn btn-warning text-white" type="button" onclick="loadFollowUps()">
+										<i class="bi bi-search"></i> Load Follow-Ups
+									</button>
+								</div>
+								<small class="text-muted">Select date to view scheduled follow-ups</small>
+							</div>
+							<div class="col-md-4 text-end">
+								<button class="btn btn-outline-primary" onclick="setTodayDate()">
+									<i class="bi bi-calendar-day"></i> Today
+								</button>
+							</div>
+						</div>
 					</div>
-					<div class="modal-body">
-						<form th:action="@{/submitForm}" method="post"
-							th:object="${inquiry}">
-							<input type="hidden" name="sourcePage" value="followUpsPage" />
-							<div class="mb-3">
-								<label class="form-label">Customer Phone Number:</label> <input
-									name="phoneno" id="modelCustomerPhoneNo" type="text"
-									class="form-control" placeholder="Enter customer phone no."
-									required />
+				</div>
+			</section>
+
+			<section class="mb-4" id="followUpsSection" style="display: none;">
+				<div class="card shadow">
+					<div class="card-header bg-success text-white">
+						<h5 class="mb-0">
+							<i class="bi bi-list-check"></i> Follow-Up Customers
+						</h5>
+					</div>
+					<div class="card-body p-0">
+						<div class="table-responsive">
+							<table class="table table-striped table-hover table-bordered mb-0">
+								<thead class="table-dark">
+									<tr>
+										<th scope="col">Customer Phone</th>
+										<th scope="col" class="text-center">Actions</th>
+									</tr>
+								</thead>
+								<tbody id="followUpTableBody">
+									<!-- Filled by JS -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section id="noFollowUpsSection" style="display: none;">
+				<div class="card shadow">
+					<div class="card-body text-center py-5">
+						<i class="bi bi-calendar-x" style="font-size: 4rem; color: #ccc;"></i>
+						<h4 class="mt-3 text-muted">No Follow-Ups Scheduled</h4>
+						<p class="text-muted">No follow-ups found for the selected date</p>
+					</div>
+				</div>
+			</section>
+
+			<section class="mt-4" id="inquiryDetailsSection" style="display: none;">
+				<div class="card shadow">
+					<div class="card-header bg-info text-white">
+						<h5 class="mb-0">
+							<i class="bi bi-chat-dots-fill"></i> Discussion History
+						</h5>
+					</div>
+					<div class="card-body p-0">
+						<div class="p-4 bg-light border-bottom">
+							<h5 id="customerNameId" class="mb-0 text-primary">
+								<i class="bi bi-person-circle"></i>
+								<span id="customerNameText"></span>
+							</h5>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover table-bordered mb-0">
+								<thead class="table-dark">
+									<tr>
+										<th>Customer Name</th>
+										<th>Interested Course</th>
+										<th>Discussion</th>
+										<th>Inquiry Type</th>
+										<th>Call Type</th>
+										<th>Date & Time</th>
+									</tr>
+								</thead>
+								<tbody id="inquiryTableBody">
+									<!-- Filled by JS -->
+								</tbody>
+							</table>
+						</div>
+						<div class="p-3 border-top">
+							<button id="addNewDiscussion" class="btn btn-primary">
+								<i class="bi bi-plus-circle"></i> Add New Discussion
+							</button>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<div class="modal fade" id="inquiryModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header bg-primary text-white">
+					<h5 class="modal-title">
+						<i class="bi bi-plus-circle-fill"></i> Continue Follow-Up
+					</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body p-4">
+					<form th:action="@{/submitForm}" 
+					      method="post" 
+					      th:object="${inquiry}"
+					      id="followUpInquiryForm">
+						
+						<input type="hidden" name="sourcePage" value="followUpsPage" />
+
+						<!-- Phone & Name (readonly) -->
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">
+									<i class="bi bi-telephone text-primary"></i> Phone Number
+								</label>
+								<input type="text" 
+								       name="phoneno" 
+								       id="modelCustomerPhoneNo" 
+								       class="form-control bg-light" 
+								       readonly />
 							</div>
-							<div class="mb-3">
-								<label class="form-label">Customer Name:</label> <input
-									name="name" id="modelCustomerName" type="text"
-									class="form-control" placeholder="Enter customer name" required />
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">
+									<i class="bi bi-person text-primary"></i> Customer Name
+								</label>
+								<input type="text" 
+								       name="name" 
+								       id="modelCustomerName" 
+								       class="form-control bg-light" 
+								       readonly />
 							</div>
-							<div class="mb-3">
-								<label class="form-label">Interested Course:</label> <input
-									name="interestedCourse" type="text" class="form-control"
-									placeholder="Enter interested Course" required />
-							</div>
-							<div class="mb-3">
-								<label class="form-label">Discussion:</label>
-								<textarea name="discussion" class="form-control"
-									placeholder="Enter discussion" required></textarea>
-							</div>
-							<div class="mb-3">
-								<label class="form-label">Inquiry Type:</label> <select
-									name="inquiryType" class="form-select" required>
-									<option value="" selected disabled>Select Inquiry
-										Type:</option>
+						</div>
+
+						<!-- Course & Discussion -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">
+								<i class="bi bi-book text-primary"></i> Interested Course
+								<span class="text-danger">*</span>
+							</label>
+							<input type="text" 
+							       name="interestedCourse" 
+							       class="form-control" 
+							       placeholder="Enter course name" 
+							       required />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label fw-bold">
+								<i class="bi bi-chat-text text-primary"></i> Discussion
+								<span class="text-danger">*</span>
+							</label>
+							<textarea name="discussion" 
+							          class="form-control" 
+							          rows="3"
+							          placeholder="Enter discussion details..." 
+							          required></textarea>
+						</div>
+
+						<!-- Type Selections -->
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">
+									<i class="bi bi-tag text-primary"></i> Inquiry Type
+									<span class="text-danger">*</span>
+								</label>
+								<select name="inquiryType" class="form-select" required>
+									<option value="" selected disabled>Select Type</option>
 									<option value="Call">Call</option>
 									<option value="Mail">Mail</option>
 									<option value="Website">Website</option>
@@ -143,156 +224,235 @@
 									<option value="Other">Other</option>
 								</select>
 							</div>
-							<div class="mb-3">
-								<label class="form-label">Call Type:</label> <select
-									name="callType" class="form-select" required>
-									<option value="" selected disabled>Select Call Type:</option>
-									<option value="Inbound Call">Inbound Call (customer
-										call to company)</option>
-									<option value="Outbound Call">Outbound Call (company
-										call to customer)</option>
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">
+									<i class="bi bi-arrow-left-right text-primary"></i> Call Type
+									<span class="text-danger">*</span>
+								</label>
+								<select name="callType" class="form-select" required>
+									<option value="" selected disabled>Select Call Type</option>
+									<option value="Inbound Call">Inbound (Customer to Company)</option>
+									<option value="Outbound Call">Outbound (Company to Customer)</option>
 								</select>
 							</div>
-							<div class="mb-3">
-								<label class="form-label">Status:</label> <select name="status"
-									id="status" class="form-select" onchange="toggleFollowUpdate()"
-									required>
-									<option value="" selected disabled>Select Status:</option>
-									<option value="Interested - (follow up)">Interested -
-										(follow up)</option>
-									<option value="Interested - (closed)">Interested -
-										(closed)</option>
-									<option value="Not Interested - (closed)">Not
-										Interested - (closed)</option>
-									<option value="Purchased - (closed)">Purchased -
-										(closed)</option>
-									<option value="Others - (closed)">Others - (closed)</option>
-								</select>
-							</div>
-							<div class="mb-3" id="followUpDateDiv">
-								<label class="form-label">Follow Up Date:</label> <input
-									name="followUpDate" type="Date" class="form-control"
-									placeholder="Enter Follow upDate" />
-							</div>
-							<button type="submit" class="btn btn-primary">Submit</button>
-						</form>
-					</div>
+						</div>
+
+						<!-- Status & Follow-up -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">
+								<i class="bi bi-check-circle text-primary"></i> Status
+								<span class="text-danger">*</span>
+							</label>
+							<select name="status" id="status" class="form-select" onchange="toggleFollowUpdate()" required>
+								<option value="" selected disabled>Select Status</option>
+								<option value="Interested - (follow up)">Interested - (follow up)</option>
+								<option value="Interested - (closed)">Interested - (closed)</option>
+								<option value="Not Interested - (closed)">Not Interested - (closed)</option>
+								<option value="Purchased - (closed)">Purchased - (closed)</option>
+								<option value="Others - (closed)">Others - (closed)</option>
+							</select>
+						</div>
+
+						<div class="mb-3" id="followUpDateDiv" style="display: none;">
+							<label class="form-label fw-bold">
+								<i class="bi bi-calendar-event text-primary"></i> Follow Up Date
+								<span class="text-danger">*</span>
+							</label>
+							<input name="followUpDate" 
+							       type="date" 
+							       class="form-control" />
+						</div>
+
+						<div class="alert alert-info">
+							<i class="bi bi-info-circle-fill"></i>
+							<strong>Note:</strong> This will update the follow-up status for this customer.
+						</div>
+
+						<div class="d-flex gap-2">
+							<button type="submit" class="btn btn-primary">
+								<i class="bi bi-check-circle"></i> Submit
+							</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+								<i class="bi bi-x-circle"></i> Cancel
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
-
 		</div>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-			crossorigin="anonymous"></script>
+	</div>
 
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<script>
-    $(document).ready(function () {
-        var todaysDate = new Date().toISOString().split('T')[0];
-        $("#followUpDate").val(todaysDate);
+	<!-- Loading Overlay -->
+	<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+		<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+			<div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem;">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+			<p class="text-white mt-3">Loading...</p>
+		</div>
+	</div>
 
-        var email = $("#sessionempEmail").val();
-        
-        fetchFollowUps(email,todaysDate)
-         
-        $("#followUpDate").on("change", function() {
-             var selectedDate = $(this).val();
-             $("#inquiryDetailsSection").hide();
-             fetchFollowUps(email, selectedDate);
-        });
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<script>
+		$(document).ready(function() {
+			setTodayDate();
+			loadFollowUps();
+		});
 
-        function fetchFollowUps(email, followUpDate){
-            $.ajax({
-                url: "/api/myFollowUps",
-                method: "GET",
-                data: {
-                    empEmail: email,
-                    followUpDate: followUpDate
-                },
-                success: function (response) {
-                    $("#followUpTableBody").empty();
-                    if (response.length > 0) {
-                        $.each(response, function (index, followUp) {
-                            var row = `<tr>
-                                <td>${followUp.phoneno}</td>
-                                <td><button class="btn btn-primary getDiscussionBtn" data-phoneno="${followUp.phoneno}">Get All Discussion..</button></td>
-                            </tr>`;
-                            $("#followUpsTable").show();
-                            $("#followUpTableBody").append(row);
-                            $("#noFollowUpsTittle").hide();
-                        });
-                    } else {
-                        $("#followUpsTable").hide();
-                        $("#noFollowUpsTittle").show();
-                        $("#inquiryDetailsSection").hide();
-                    }
-                },
-                error: function (xhr, status, error) {
-                	console.error("Error fetching follow-ups:", error, xhr.responseText);
-                }
-            });
-        }
-        
-        $(document).on("click",".getDiscussionBtn",function(){
-             var phoneno = $(this).data("phoneno");
-             fetchInquires(phoneno);
-        });
-
-        function fetchInquires(phoneno){
-             $.ajax({
-                 url:"/api/searchInquiries",
-                 method:"GET",
-                 data:{
-                	 phoneNumber : phoneno
-                 },
-                 success:function(response){
-                	 $("#inquiryTableBody").empty();
-                        if(response.length>0){
-                           $("#inquiryDetailsSection").show();
-                           $("#modelCustomerPhoneNo").val(response[0].phoneno);
-                           $("#modelCustomerName").val(response[0].name);
-                           $("#customerNameId").text("Customer Name : " +response[0].name);
-                           
-                           $.each(response, function (index,inquiry) {
-                               var row = `<tr>
-                                   <td>${inquiry.name}</td>
-                                   <td>${inquiry.interestedCourse}</td>
-                                   <td>${inquiry.discussion}</td>
-                                   <td>${inquiry.inquiryType}</td>
-                                   <td>${inquiry.callType}</td>
-                                   <td>${inquiry.dateofInquiry}</td>
-                                   <td>${inquiry.timeofInquiry}</td>
-                               </tr>`;
-                               $("#inquiryTableBody").append(row);
-                           });
-                         }else{
-                            alert("No data found..")
-                         }                     
-                 },
-                 error:function(xhr, status, error){ 
-                    console.error("Error fetching inquiries:", error, xhr.responseText);
-                 }
-              });
-        }
-        
-        $(document).on("click","#addNewDiscussion",function(){
-            $("#inquiryModal").modal("show");
-        });
-
-    });
-    
-    function toggleFollowUpdate() {
-		var status = document.getElementById("status").value;
-		var followUpDateDiv = document.getElementById("followUpDateDiv");
-
-		if (status === "Interested - (follow up)") {
-			followUpDateDiv.style.display = "block";
-		} else {
-			followUpDateDiv.style.display = "none";
+		function setTodayDate() {
+			const today = new Date().toISOString().split('T')[0];
+			$("#followUpDate").val(today);
 		}
-	}
-</script>
-</body>
 
+		function loadFollowUps() {
+			const email = $("#sessionempEmail").val();
+			const selectedDate = $("#followUpDate").val();
+			
+			if (!selectedDate) {
+				alert('Please select a date');
+				return;
+			}
+			
+			$("#inquiryDetailsSection").hide();
+			fetchFollowUps(email, selectedDate);
+		}
+
+		function fetchFollowUps(email, followUpDate) {
+			$("#loadingOverlay").show();
+			
+			$.ajax({
+				url: "/api/myFollowUps",
+				method: "GET",
+				data: {
+					empEmail: email,
+					followUpDate: followUpDate
+				},
+				success: function(response) {
+					$("#loadingOverlay").hide();
+					$("#followUpTableBody").empty();
+					
+					if (response.length > 0) {
+						$.each(response, function(index, followUp) {
+							const row = `<tr>
+								<td>
+									<i class="bi bi-telephone text-primary"></i>
+									<strong>${followUp.phoneno}</strong>
+								</td>
+								<td class="text-center">
+									<button class="btn btn-sm btn-info getDiscussionBtn" 
+									        data-phoneno="${followUp.phoneno}"
+									        title="View discussions">
+										<i class="bi bi-eye-fill text-white"></i> View Details
+									</button>
+								</td>
+							</tr>`;
+							$("#followUpTableBody").append(row);
+						});
+						$("#followUpsSection").show();
+						$("#noFollowUpsSection").hide();
+					} else {
+						$("#followUpsSection").hide();
+						$("#noFollowUpsSection").show();
+					}
+				},
+				error: function(xhr, status, error) {
+					$("#loadingOverlay").hide();
+					console.error("Error fetching follow-ups:", error, xhr.responseText);
+					
+					if (xhr.status === 401) {
+						alert('Session expired. Please login again.');
+						window.location.href = '/employeeLogin';
+					} else {
+						alert('Failed to load follow-ups. Please try again.');
+					}
+				}
+			});
+		}
+
+		$(document).on("click", ".getDiscussionBtn", function() {
+			const phoneno = $(this).data("phoneno");
+			fetchInquiries(phoneno);
+		});
+
+		function fetchInquiries(phoneno) {
+			$("#loadingOverlay").show();
+			
+			$.ajax({
+				url: "/api/searchInquiries",
+				method: "GET",
+				data: { phoneNumber: phoneno },
+				success: function(response) {
+					$("#loadingOverlay").hide();
+					$("#inquiryTableBody").empty();
+					
+					if (response.length > 0) {
+						$("#inquiryDetailsSection").show();
+						$("#modelCustomerPhoneNo").val(response[0].phoneno);
+						$("#modelCustomerName").val(response[0].name);
+						$("#customerNameText").text(response[0].name);
+						
+						$.each(response, function(index, inquiry) {
+							const row = `<tr>
+								<td>${inquiry.name || '-'}</td>
+								<td>${inquiry.interestedCourse || '-'}</td>
+								<td>${inquiry.discussion || '-'}</td>
+								<td>${inquiry.inquiryType || '-'}</td>
+								<td>${inquiry.callType || '-'}</td>
+								<td><small>${inquiry.dateofInquiry || '-'}, ${inquiry.timeofInquiry || '-'}</small></td>
+							</tr>`;
+							$("#inquiryTableBody").append(row);
+						});
+						
+						// Scroll to inquiry section
+						$('html, body').animate({
+							scrollTop: $("#inquiryDetailsSection").offset().top - 100
+						}, 500);
+					} else {
+						alert("No inquiry history found for this customer");
+					}
+				},
+				error: function(xhr, status, error) {
+					$("#loadingOverlay").hide();
+					console.error("Error fetching inquiries:", error, xhr.responseText);
+					
+					if (xhr.status === 401) {
+						alert('Session expired. Please login again.');
+						window.location.href = '/employeeLogin';
+					} else {
+						alert('Failed to load inquiry details. Please try again.');
+					}
+				}
+			});
+		}
+
+		$(document).on("click", "#addNewDiscussion", function() {
+			$("#inquiryModal").modal("show");
+		});
+
+		$("#followUpDate").on("change", function() {
+			loadFollowUps();
+		});
+
+		function toggleFollowUpdate() {
+			const status = document.getElementById("status").value;
+			const followUpDateDiv = document.getElementById("followUpDateDiv");
+			
+			if (status === "Interested - (follow up)") {
+				followUpDateDiv.style.display = "block";
+			} else {
+				followUpDateDiv.style.display = "none";
+			}
+		}
+
+		setTimeout(function() {
+			const alerts = document.querySelectorAll('.alert-success');
+			alerts.forEach(function(alert) {
+				const bsAlert = new bootstrap.Alert(alert);
+				bsAlert.close();
+			});
+		}, 5000);
+	</script>
+</body>
 </html>

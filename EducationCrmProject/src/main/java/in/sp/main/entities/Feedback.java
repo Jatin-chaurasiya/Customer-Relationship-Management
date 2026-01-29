@@ -8,28 +8,33 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Feedback {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
+	@Column(nullable = false, length = 100)
 	private String userName;
 
-	@Column
+	@Column(nullable = false, length = 100)
 	private String userEmail;
 
-	@Column(length = 3000)
+	@Column(nullable = false, length = 3000)
 	private String userFeedback;
 
-	@Column
+	@Column(length = 20)
 	private String dateOfFeedback;
 
-	@Column
+	@Column(length = 20)
 	private String timeOfFeedback;
 
-	@Column
-	private String readStatus;
+	@Column(length = 20)
+	private String readStatus; // "read" or "unread"
 
+	public Feedback() {
+	}
+
+	// Getters & Setters
 	public Long getId() {
 		return id;
 	}

@@ -12,13 +12,20 @@ public class FollowUps {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+
+	@Column(nullable = false, length = 15)
 	private String phoneno;
-	@Column
+
+	@Column(nullable = false, length = 20)
 	private String followUpDate;
-	@Column
+
+	@Column(nullable = false, length = 100)
 	private String empEmail;
 
+	public FollowUps() {
+	}
+
+	// Getters & Setters
 	public Long getId() {
 		return id;
 	}
@@ -50,5 +57,4 @@ public class FollowUps {
 	public void setEmpEmail(String empEmail) {
 		this.empEmail = empEmail;
 	}
-
 }

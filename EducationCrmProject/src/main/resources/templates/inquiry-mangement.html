@@ -1,229 +1,378 @@
-
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inquiry Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    
-    <style>
-    	#plusButton, #newInquiryButton, #customerName, #inquiriesTable
-    	{
-    		display: none;
-    	}	
-    </style>
-
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Inquiry Management - Employee Panel</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/Employee-layout.css}" />
 </head>
 
 <body>
-
-    <!-- Sidebar -->
+	<!-- Sidebar -->
 	<div th:replace="~{fragments/employee-sidebar :: employee-sidebar}"></div>
 
-    <div class="content">
-        <h2> Inquiry Management </h2>
-        <p> Here you can search and add new inquiry </p>
-        
-	     <!-- Include fragment -->
-		<div th:replace="~{fragments/SuccessandError :: SuccessandError}"></div>
+	<!-- Main Content -->
+	<div class="content">
+		<div class="container-fluid">
+			<!-- Header -->
+			<div class="mb-4">
+				<h2>
+					<i class="bi bi-telephone-fill text-primary"></i> 
+					Inquiry Management
+				</h2>
+				<p class="text-muted mb-0">Search and manage customer inquiries</p>
+			</div>
 
-        <div class="container my-4" style="background-color: rgb(54, 54, 54);">
-            <div class="navbar p-3">
-                <div class="d-flex align-items-center">
-                    <div class="input-group me-2">
-                        <input type="text" class="form-control" placeholder="Search by phone number" id="searchPhoneNumber">
-                        <button class="btn btn-outline-secondary" type="button" onclick="searchInquiry()">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                    <button id="plusButton" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <i class="bi bi-plus"></i>
-                    </button>
-                </div>
-                <a href="/newInquiry" id="newInquiryButton" class="btn btn-success ms-auto">New Inquiry</a>
-            </div>
-        </div>
-        
-        <div>
-            <h4 id="customerName"> Customer Name : Deepak </h4>
-            <table id="inquiriesTable" class="table table-striped table-hover table-bordered shadow mt-4">
-                <thead>
-                    <tr>
-                        <th scope="col">Interested Course</th>
-                        <th scope="col">Discussion</th>
-                        <th scope="col">Inquiry Type</th>
-                        <th scope="col">Call Type</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Inquiry Date / Time</th>
-                    </tr>
-                </thead>
-                <tbody id="inquiryTableBody">
-                    
-                </tbody>
-            </table>
-        </div>
+			<!-- Success/Error Messages -->
+			<div th:replace="~{fragments/SuccessandError :: SuccessandError}"></div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Continue Inquiry</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- form or content for the old inquiry continuation -->
-                        <form th:action="@{/submitInquiryForm}" method="POST" th:object="${inquiry}">
-                            <div class="mb-3">
-                                <label class="form-label">Customer Phone Number:</label>
-                                <input type="text" name="phoneno" id="modalCustomerPhno" class="form-control" placeholder="Enter customer phone no." required />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Customer Name:</label>
-                                <input type="text" name="name" id="modalCustomerName" class="form-control" placeholder="Enter customer name" required />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Interested Course:</label>
-                                <input type="text" name="interestedCourse" class="form-control" placeholder="Enter interested Course" required />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Discussion:</label>
-                                <textarea name="discussion" class="form-control" placeholder="Enter discussion" required></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Inquiry Type:</label>
-                                <select name="inquiryType" class="form-select" required>
-                                	<option value="" selected disabled>Select Inquiry Type</option>
-                                    <option value="Call">Call</option>
-                                    <option value="Mail">Mail</option>
-                                    <option value="Website">Website</option>
-                                    <option value="Social Network">Social Network</option>
-                                    <option value="Friend Reference">Friend Reference</option>
-                                    <option value="Advertisement">Advertisement</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Call Type:</label>
-                                <select name="callType" class="form-select" required>
-                                    <option value="" selected disabled>Select Call Type</option>
-                                    <option value="Inbound Call">Inbound Call (customer call to company)</option>
-                                    <option value="Outbound Call">Outbound Call (company call to customer)</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Status:</label>
-                                <select name="status" id="status" class="form-select" onchange="toggleFollowUpDate()" required>
-                                    <option value="" selected disabled>Select Status</option>
-                                    <option value="Interested - (follow up)">Interested - (follow up)</option>
-                                    <option value="Interested - (closed)">Interested - (closed)</option>
-                                    <option value="Not Interested - (closed)">Not Interested - (closed)</option>
-                                    <option value="Purchased - (closed)">Purchased - (closed)</option>
-                                    <option value="Others - (closed)">Others - (closed)</option>
-                                </select>
-                            </div>
-                            <div class="mb-3" id="followUpDateDiv">
-				                <label class="form-label">Follow Up Date:</label>
-				                <input name="followUpDate" type="date" class="form-control" placeholder="Enter follow up date" />
-				            </div>
-                            <button type="submit" class="btn btn-primary">Add Inquiry</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script>
-    	function searchInquiry()
-    	{
-    		var searchPhoneNumber = $("#searchPhoneNumber").val();
-    		//alert(searchPhoneNumber);
-    		
-    		$.ajax({
-    			url: "/api/searchInquiries",
-    			type: "GET",
-    			data: {phoneNumber : searchPhoneNumber},
-    			success: function(response){
-    				//alert(response);
-    				
-    				$("#inquiryTableBody").empty();
-    			
-    				if(response.length > 0)
-    				{
-    					$.each(response, function(index, inquiry){
-    						//alert(`${inquiry.discussion}`);
-    						
-    						var row = `<tr>
-					                       <td> ${inquiry.interestedCourse} </td>
-					                       <td> ${inquiry.discussion} </td>
-					                       <td> ${inquiry.inquiryType} </td>
-					                       <td> ${inquiry.callType} </td>
-					                       <td> ${inquiry.status} </td>
-					                       <td> ${inquiry.dateOfInquiry}, ${inquiry.timeOfInquiry} </td>
-					                   </tr>`;
-					                   
-					        $("#inquiryTableBody").append(row);
-    					});
-    					
-    					$("#inquiriesTable").show();
-    					$("#plusButton").show();
-    					
-    					var customerName = response[0].name;
-    					$("#customerName").text("Customer Name : "+customerName).show();
-    					
-    					$("#newInquiryButton").hide();
-    					
-    					$("#modalCustomerPhno").val(searchPhoneNumber);
-    					$("#modalCustomerName").val(customerName);
-    				}
-    				else
-    				{
-    					//alert("No data found");
-    					$("#customerName").text("No customer found").show();
-    					
-    					$("#inquiriesTable").hide();
-    					$("#plusButton").hide();
-    					
-    					$("#newInquiryButton").show();
-    					
-    					$("#modalCustomerPhno").val("");
-    					$("#modalCustomerName").val("");
-    				}
-    			},
-    			error: function(error){
-    				alert(error);
-    			}
-    		});
-    	}
-    	
-    	function toggleFollowUpDate()
-    	{
-    		var status = document.getElementById("status").value;
-    		var followUpDateDiv = document.getElementById("followUpDateDiv");
-    		
-    		if(status === "Interested - (follow up)")
-    		{
-    			followUpDateDiv.style.display = "block";
-    		}
-    		else
-    		{
-    			followUpDateDiv.style.display = "none";
-    		}
-    	}
-    </script>
+			<!-- Search Section -->
+			<section class="mb-4">
+				<div class="card shadow">
+					<div class="card-header bg-primary text-white">
+						<h5 class="mb-0">
+							<i class="bi bi-search"></i> Search Customer
+						</h5>
+					</div>
+					<div class="card-body p-4">
+						<div class="row align-items-center">
+							<div class="col-md-8">
+								<div class="input-group">
+									<span class="input-group-text">
+										<i class="bi bi-telephone"></i>
+									</span>
+									<input type="text" 
+									       class="form-control" 
+									       placeholder="Enter 10 digit phone number" 
+									       id="searchPhoneNumber"
+									       maxlength="10"
+									       pattern="[0-9]{10}">
+									<button class="btn btn-primary" 
+									        type="button" 
+									        onclick="searchInquiry()">
+										<i class="bi bi-search"></i> Search
+									</button>
+								</div>
+								<small class="text-muted">Search by customer's phone number</small>
+							</div>
+							<div class="col-md-4 text-end">
+								<button id="plusButton" 
+								        class="btn btn-success me-2" 
+								        data-bs-toggle="modal" 
+								        data-bs-target="#continueInquiryModal"
+								        style="display: none;">
+									<i class="bi bi-plus-circle"></i> Continue Inquiry
+								</button>
+								<a href="/newInquiry" 
+								   id="newInquiryButton" 
+								   class="btn btn-success"
+								   style="display: none;">
+									<i class="bi bi-file-earmark-plus"></i> New Inquiry
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+			<!-- Customer Info & Results -->
+			<section>
+				<div id="customerInfoCard" style="display: none;">
+					<div class="card shadow mb-4">
+						<div class="card-body">
+							<h4 id="customerName" class="text-primary mb-0">
+								<i class="bi bi-person-circle"></i> 
+								<span id="customerNameText"></span>
+							</h4>
+						</div>
+					</div>
+				</div>
+
+				<!-- Inquiries Table -->
+				<div id="inquiriesTableContainer" style="display: none;">
+					<div class="card shadow">
+						<div class="card-header bg-success text-white">
+							<h5 class="mb-0">
+								<i class="bi bi-list-ul"></i> Inquiry History
+							</h5>
+						</div>
+						<div class="card-body p-0">
+							<div class="table-responsive">
+								<table class="table table-striped table-hover table-bordered mb-0">
+									<thead class="table-dark">
+										<tr>
+											<th scope="col">Interested Course</th>
+											<th scope="col">Discussion</th>
+											<th scope="col">Inquiry Type</th>
+											<th scope="col">Call Type</th>
+											<th scope="col">Status</th>
+											<th scope="col">Date & Time</th>
+										</tr>
+									</thead>
+									<tbody id="inquiryTableBody">
+										<!-- Filled by JS -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<!-- Continue Inquiry Modal -->
+	<div class="modal fade" id="continueInquiryModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h5 class="modal-title">
+						<i class="bi bi-plus-circle-fill"></i> Continue Inquiry
+					</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body p-4">
+					<form th:action="@{/submitInquiryForm}" 
+					      method="post" 
+					      th:object="${inquiry}"
+					      id="continueInquiryForm">
+
+						<!-- Phone & Name (readonly) -->
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">
+									<i class="bi bi-telephone text-primary"></i> Phone Number
+								</label>
+								<input type="text" 
+								       name="phoneno" 
+								       id="modalCustomerPhno" 
+								       class="form-control bg-light" 
+								       readonly />
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">
+									<i class="bi bi-person text-primary"></i> Customer Name
+								</label>
+								<input type="text" 
+								       name="name" 
+								       id="modalCustomerName" 
+								       class="form-control bg-light" 
+								       readonly />
+							</div>
+						</div>
+
+						<!-- Course & Discussion -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">
+								<i class="bi bi-book text-primary"></i> Interested Course
+								<span class="text-danger">*</span>
+							</label>
+							<input type="text" 
+							       name="interestedCourse" 
+							       class="form-control" 
+							       placeholder="Enter course name" 
+							       required />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label fw-bold">
+								<i class="bi bi-chat-text text-primary"></i> Discussion
+								<span class="text-danger">*</span>
+							</label>
+							<textarea name="discussion" 
+							          class="form-control" 
+							          rows="3"
+							          placeholder="Enter discussion details" 
+							          required></textarea>
+						</div>
+
+						<!-- Type Selections -->
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">
+									<i class="bi bi-tag text-primary"></i> Inquiry Type
+									<span class="text-danger">*</span>
+								</label>
+								<select name="inquiryType" class="form-select" required>
+									<option value="" selected disabled>Select Type</option>
+									<option value="Call">Call</option>
+									<option value="Mail">Mail</option>
+									<option value="Website">Website</option>
+									<option value="Social Network">Social Network</option>
+									<option value="Friend Reference">Friend Reference</option>
+									<option value="Advertisement">Advertisement</option>
+									<option value="Other">Other</option>
+								</select>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">
+									<i class="bi bi-arrow-left-right text-primary"></i> Call Type
+									<span class="text-danger">*</span>
+								</label>
+								<select name="callType" class="form-select" required>
+									<option value="" selected disabled>Select Call Type</option>
+									<option value="Inbound Call">Inbound (Customer to Company)</option>
+									<option value="Outbound Call">Outbound (Company to Customer)</option>
+								</select>
+							</div>
+						</div>
+
+						<!-- Status & Follow-up -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">
+								<i class="bi bi-check-circle text-primary"></i> Status
+								<span class="text-danger">*</span>
+							</label>
+							<select name="status" id="statusModal" class="form-select" onchange="toggleFollowUpDateModal()" required>
+								<option value="" selected disabled>Select Status</option>
+								<option value="Interested - (follow up)">Interested - (follow up)</option>
+								<option value="Interested - (closed)">Interested - (closed)</option>
+								<option value="Not Interested - (closed)">Not Interested - (closed)</option>
+								<option value="Purchased - (closed)">Purchased - (closed)</option>
+								<option value="Others - (closed)">Others - (closed)</option>
+							</select>
+						</div>
+
+						<div class="mb-3" id="followUpDateDivModal" style="display: none;">
+							<label class="form-label fw-bold">
+								<i class="bi bi-calendar-event text-primary"></i> Follow Up Date
+								<span class="text-danger">*</span>
+							</label>
+							<input name="followUpDate" 
+							       type="date" 
+							       class="form-control" />
+						</div>
+
+						<div class="alert alert-info">
+							<i class="bi bi-info-circle-fill"></i>
+							<strong>Note:</strong> This will add a new inquiry entry for the existing customer.
+						</div>
+
+						<div class="d-flex gap-2">
+							<button type="submit" class="btn btn-success">
+								<i class="bi bi-check-circle"></i> Add Inquiry
+							</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+								<i class="bi bi-x-circle"></i> Cancel
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Loading Overlay -->
+	<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+		<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+			<div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem;">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+			<p class="text-white mt-3">Searching...</p>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<script>
+		// Phone number validation - only digits
+		$("#searchPhoneNumber").on('input', function() {
+			this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+		});
+
+		function searchInquiry() {
+			const searchPhoneNumber = $("#searchPhoneNumber").val().trim();
+			
+			// Validation
+			if (searchPhoneNumber.length !== 10) {
+				alert('Please enter a valid 10 digit phone number');
+				return;
+			}
+			
+			// Show loading
+			$("#loadingOverlay").show();
+			
+			$.ajax({
+				url: "/api/searchInquiries",
+				type: "GET",
+				data: { phoneNumber: searchPhoneNumber },
+				success: function(response) {
+					$("#loadingOverlay").hide();
+					$("#inquiryTableBody").empty();
+				
+					if (response.length > 0) {
+						// Build table rows
+						$.each(response, function(index, inquiry) {
+							const row = `<tr>
+								<td>${inquiry.interestedCourse || '-'}</td>
+								<td>${inquiry.discussion || '-'}</td>
+								<td>${inquiry.inquiryType || '-'}</td>
+								<td>${inquiry.callType || '-'}</td>
+								<td><span class="badge bg-info">${inquiry.status || '-'}</span></td>
+								<td><small>${inquiry.dateofInquiry || '-'}, ${inquiry.timeofInquiry || '-'}</small></td>
+							</tr>`;
+							$("#inquiryTableBody").append(row);
+						});
+						
+						// Show results
+						$("#customerInfoCard").show();
+						$("#customerNameText").text(response[0].name);
+						$("#inquiriesTableContainer").show();
+						$("#plusButton").show();
+						$("#newInquiryButton").hide();
+						
+						// Set modal fields
+						$("#modalCustomerPhno").val(searchPhoneNumber);
+						$("#modalCustomerName").val(response[0].name);
+					} else {
+						// No results
+						$("#customerInfoCard").show();
+						$("#customerNameText").text("No customer found with this number");
+						$("#inquiriesTableContainer").hide();
+						$("#plusButton").hide();
+						$("#newInquiryButton").show();
+						
+						$("#modalCustomerPhno").val("");
+						$("#modalCustomerName").val("");
+					}
+				},
+				error: function(xhr, status, error) {
+					$("#loadingOverlay").hide();
+					if (xhr.status === 401) {
+						alert('Session expired. Please login again.');
+						window.location.href = '/employeeLogin';
+					} else {
+						alert('Failed to search inquiries. Please try again.');
+					}
+					console.error('Error:', error);
+				}
+			});
+		}
+		
+		function toggleFollowUpDateModal() {
+			const status = document.getElementById("statusModal").value;
+			const followUpDiv = document.getElementById("followUpDateDivModal");
+			
+			if (status === "Interested - (follow up)") {
+				followUpDiv.style.display = "block";
+			} else {
+				followUpDiv.style.display = "none";
+			}
+		}
+
+		// Auto-hide alerts
+		setTimeout(function() {
+			const alerts = document.querySelectorAll('.alert-success, .alert-danger');
+			alerts.forEach(function(alert) {
+				if (alert && !alert.classList.contains('alert-info')) {
+					const bsAlert = new bootstrap.Alert(alert);
+					bsAlert.close();
+				}
+			});
+		}, 5000);
+	</script>
 </body>
-
 </html>

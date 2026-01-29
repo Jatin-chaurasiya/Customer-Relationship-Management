@@ -34,14 +34,18 @@
 						<li class="nav-item"><a class="nav-link text-white"
 							th:href="@{/index}">Home</a></li>
 
-						<li class="nav-item"><a class="nav-link text-white"
-							th:href="@{/myCourses}">My Courses</a></li>
+						<!-- Show only if user is logged in -->
+						<li class="nav-item" th:if="${sessionUser != null}"><a
+							class="nav-link text-white" th:href="@{/myCourses}">My
+								Courses</a></li>
 
-						<li class="nav-item"><a class="nav-link text-white"
-							aria-current="page" href="provideFeedback">Feedback</a></li>
+						<!-- Show only if user is logged in -->
+						<li class="nav-item" th:if="${sessionUser != null}"><a
+							class="nav-link text-white" th:href="@{/provideFeedback}">Feedback</a>
+						</li>
 
-						<!-- User Profile -->
-						<li class="nav-item ms-3"><a
+						<!-- User Profile - Show only if logged in -->
+						<li class="nav-item ms-3" th:if="${sessionUser != null}"><a
 							class="nav-link text-white d-flex align-items-center"
 							th:href="@{/userProfile}"> <i class="bi bi-person-circle"
 								style="font-size: 1.5rem;"></i> <span class="ms-1">Hello,
@@ -55,13 +59,25 @@
 							role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								Account </a>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" th:href="@{/adminLogin}">Admin
-										Login</a></li>
-								<li><a class="dropdown-item" th:href="@{/employeeLogin}">Employee
-										Login</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item text-danger"
-									th:href="@{/logout}">Logout</a></li>
+								<!-- Show Login & Register only if user is NOT logged in -->
+								<li th:if="${sessionUser == null}"><a class="dropdown-item"
+									th:href="@{/login}">Login</a></li>
+								<li th:if="${sessionUser == null}"><a class="dropdown-item"
+									th:href="@{/register}">Register</a></li>
+
+								<!-- Show Admin & Employee Login only if user IS logged in -->
+								<li th:if="${sessionUser != null}"><a class="dropdown-item"
+									th:href="@{/adminLogin}">Admin Login</a></li>
+								<li th:if="${sessionUser != null}"><a class="dropdown-item"
+									th:href="@{/employeeLogin}">Employee Login</a></li>
+
+								<!-- Show logout only if user is logged in -->
+								<li th:if="${sessionUser != null}">
+									<hr class="dropdown-divider">
+								</li>
+								<li th:if="${sessionUser != null}"><a
+									class="dropdown-item text-danger" th:href="@{/logout}">Logout</a>
+								</li>
 							</ul></li>
 
 					</ul>

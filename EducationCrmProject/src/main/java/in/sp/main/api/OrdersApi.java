@@ -25,10 +25,8 @@ public class OrdersApi {
 	@PostMapping("/storeOrderDetails")
 	public ResponseEntity<String> storeUserOrders(@RequestBody Orders order) throws RazorpayException {
 
-		// Initialize Razorpay client
 		RazorpayClient razorpay = new RazorpayClient("rzp_test_R8jbIJWbxXJTNi", "E3AGxLAJl6UnMLOdLOxiF3T0");
 
-		// Create Razorpay order
 		JSONObject orderRequest = new JSONObject();
 		orderRequest.put("amount", order.getCourseAmount());
 		orderRequest.put("currency", "INR");
@@ -38,11 +36,9 @@ public class OrdersApi {
 
 		System.out.println(razorpayOrder);
 
-		// Store Razorpay order ID in your entity
 		String orderId = razorpayOrder.get("id");
 		order.setOrderId(orderId);
 
-		// Save to database
 		ordersService.storeUserOrders(order);
 
 		return ResponseEntity.ok("Order details stored successfully");

@@ -9,15 +9,26 @@ import in.sp.main.repositories.EmpSalesRepository;
 
 @Service
 public class EmpSalesService {
+
 	@Autowired
 	private EmpSalesRepository empSalesRepository;
 
 	public String findTotalSalesByAllEmployee() {
-		return empSalesRepository.findTotalSalesByAllEmployees();
+		try {
+			String totalSales = empSalesRepository.findTotalSalesByAllEmployees();
+			return totalSales != null ? totalSales : "0";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "0";
+		}
 	}
 
 	public List<Object[]> findTotalSalesByEachEmployee() {
-		return empSalesRepository.findTotalSalesByEachEmployees();
+		try {
+			return empSalesRepository.findTotalSalesByEachEmployees();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return List.of();
+		}
 	}
-
 }

@@ -15,16 +15,20 @@ public class CustomerService {
 	private CustomerRepository customerRepository;
 
 	public Page<User> getAllUserDetailsByPagination(Pageable pageable) {
-
 		return customerRepository.findAll(pageable);
 	}
 
 	public User getCustomerDetails(String userEmail) {
-		return customerRepository.findByEmail(userEmail);
+		if (userEmail == null || userEmail.trim().isEmpty()) {
+			return null;
+		}
+		return customerRepository.findByEmail(userEmail.trim());
 	}
 
 	public void updateUserBanStatus(User user) {
+		if (user == null || user.getId() == null) {
+			throw new IllegalArgumentException("Invalid user data");
+		}
 		customerRepository.save(user);
 	}
-
 }

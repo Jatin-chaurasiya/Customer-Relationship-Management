@@ -1,123 +1,232 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>New Inquiry</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-<link rel="stylesheet" th:href='@{/css/style.css}' />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>New Inquiry - Employee Panel</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/Employee-layout.css}" />
 </head>
 
 <body>
-	<!--Sidebar-->
-	<div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
-	<!--End of Sidebar-->
-	<!--Content-->
+	<!-- Sidebar -->
+	<div th:replace="~{fragments/employee-sidebar :: employee-sidebar}"></div>
+
+	<!-- Main Content -->
 	<div class="content">
-		<h2>New Inquiry</h2>
-		<p>Provide Customer Details Properly</p>
-
-		<section class="mt-5">
-			<h3 class="text-center">Add New Inquiry</h3>
-			<div class="row justify-content-center">
-				<div class="card shadow p-5" style="width: 40%">
-
-					<form th:action="@{/submitForm}" method="post"
-						th:object="${inquiry}">
-						<div class="mb-3">
-							<label class="form-label">Customer Phone Number:</label> <input
-								name="phoneno" type="text" class="form-control"
-								placeholder="Enter customer phone no." required />
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Customer Name:</label> <input
-								name="name" type="text" class="form-control"
-								placeholder="Enter customer name" required />
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Interested Course:</label> <input
-								name="interestedCourse" type="text" class="form-control"
-								placeholder="Enter interested Course" required />
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Discussion:</label>
-							<textarea name="discussion" class="form-control"
-								placeholder="Enter discussion" required></textarea>
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Inquiry Type:</label> <select
-								name="inquiryType" class="form-select" required>
-								<option value="" selected disabled>Select Inquiry Type :</option>
-								<option value="Call">Call</option>
-								<option value="Mail">Mail</option>
-								<option value="Website">Website</option>
-								<option value="Social Network">Social Network</option>
-								<option value="Friend Reference">Friend Reference</option>
-								<option value="Advertisement">Advertisement</option>
-								<option value="Other">Other</option>
-							</select>
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Call Type:</label> <select
-								name="callType" class="form-select" required>
-								<option value="" selected disabled>Select Call Type:</option>
-								<option value="Inbound Call">Inbound Call (customer
-									call to company)</option>
-								<option value="Outbound Call">Outbound Call (company
-									call to customer)</option>
-							</select>
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Status:</label> <select name="status"
-								class="form-select" id="status" onchange="toggleFollowUpdate()" required>
-								<option value="" selected disabled>Select Status: </option>
-								<option value="Interested - (follow up)">Interested -
-									(follow up)</option>
-								<option value="Interested - (closed)">Interested -
-									(closed)</option>
-								<option value="Not Interested - (closed)">Not
-									Interested - (closed)</option>
-								<option value="Purchased - (closed)">Purchased -
-									(closed)</option>
-								<option value="Others - (closed)">Others - (closed)</option>
-							</select>
-						</div>
-						<div class="mb-3" id="followUpDateDiv">
-							<label class="form-label">Follow Up Date:</label> <input
-								name="followUpDate" type="Date" class="form-control"
-								placeholder="Enter Follow upDate" />
-						</div>
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</form>
+		<div class="container-fluid">
+			<!-- Header with Back Button -->
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<div>
+					<h2>
+						<i class="bi bi-file-earmark-plus text-success"></i> 
+						New Inquiry
+					</h2>
+					<p class="text-muted mb-0">Add a new customer inquiry</p>
 				</div>
+				<a href="/inquiryMangement" class="btn btn-secondary">
+					<i class="bi bi-arrow-left"></i> Back
+				</a>
 			</div>
-		</section>
+
+			<!-- Form Section -->
+			<section class="mt-4">
+				<div class="row justify-content-center">
+					<div class="col-lg-8 col-md-10">
+						<div class="card shadow">
+							<div class="card-header bg-success text-white">
+								<h5 class="mb-0">
+									<i class="bi bi-person-plus-fill"></i> Customer Inquiry Details
+								</h5>
+							</div>
+							<div class="card-body p-4">
+								<form th:action="@{/submitForm}" 
+								      method="post" 
+								      th:object="${inquiry}"
+								      id="newInquiryForm">
+
+									<!-- Phone & Name -->
+									<div class="row">
+										<div class="col-md-6 mb-3">
+											<label class="form-label fw-bold">
+												<i class="bi bi-telephone text-primary"></i> Phone Number
+												<span class="text-danger">*</span>
+											</label>
+											<input type="tel" 
+											       name="phoneno" 
+											       class="form-control" 
+											       placeholder="10 digit number" 
+											       required 
+											       pattern="[0-9]{10}"
+											       maxlength="10" />
+											<small class="text-muted">10 digit mobile number</small>
+										</div>
+										<div class="col-md-6 mb-3">
+											<label class="form-label fw-bold">
+												<i class="bi bi-person text-primary"></i> Customer Name
+												<span class="text-danger">*</span>
+											</label>
+											<input type="text" 
+											       name="name" 
+											       class="form-control" 
+											       placeholder="Full name" 
+											       required 
+											       minlength="2"
+											       maxlength="100" />
+										</div>
+									</div>
+
+									<!-- Course -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-book text-primary"></i> Interested Course
+											<span class="text-danger">*</span>
+										</label>
+										<input type="text" 
+										       name="interestedCourse" 
+										       class="form-control" 
+										       placeholder="Enter course name" 
+										       required 
+										       maxlength="100" />
+									</div>
+
+									<!-- Discussion -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-chat-text text-primary"></i> Discussion
+											<span class="text-danger">*</span>
+										</label>
+										<textarea name="discussion" 
+										          class="form-control" 
+										          rows="4"
+										          placeholder="Enter discussion details..." 
+										          required
+										          minlength="10"
+										          maxlength="1000"></textarea>
+										<small class="text-muted">Minimum 10 characters</small>
+									</div>
+
+									<!-- Inquiry & Call Type -->
+									<div class="row">
+										<div class="col-md-6 mb-3">
+											<label class="form-label fw-bold">
+												<i class="bi bi-tag text-primary"></i> Inquiry Type
+												<span class="text-danger">*</span>
+											</label>
+											<select name="inquiryType" class="form-select" required>
+												<option value="" selected disabled>Select Inquiry Type</option>
+												<option value="Call">Call</option>
+												<option value="Mail">Mail</option>
+												<option value="Website">Website</option>
+												<option value="Social Network">Social Network</option>
+												<option value="Friend Reference">Friend Reference</option>
+												<option value="Advertisement">Advertisement</option>
+												<option value="Other">Other</option>
+											</select>
+										</div>
+										<div class="col-md-6 mb-3">
+											<label class="form-label fw-bold">
+												<i class="bi bi-arrow-left-right text-primary"></i> Call Type
+												<span class="text-danger">*</span>
+											</label>
+											<select name="callType" class="form-select" required>
+												<option value="" selected disabled>Select Call Type</option>
+												<option value="Inbound Call">Inbound (Customer to Company)</option>
+												<option value="Outbound Call">Outbound (Company to Customer)</option>
+											</select>
+										</div>
+									</div>
+
+									<!-- Status -->
+									<div class="mb-3">
+										<label class="form-label fw-bold">
+											<i class="bi bi-check-circle text-primary"></i> Status
+											<span class="text-danger">*</span>
+										</label>
+										<select name="status" id="status" class="form-select" onchange="toggleFollowUpdate()" required>
+											<option value="" selected disabled>Select Status</option>
+											<option value="Interested - (follow up)">Interested - (follow up)</option>
+											<option value="Interested - (closed)">Interested - (closed)</option>
+											<option value="Not Interested - (closed)">Not Interested - (closed)</option>
+											<option value="Purchased - (closed)">Purchased - (closed)</option>
+											<option value="Others - (closed)">Others - (closed)</option>
+										</select>
+									</div>
+
+									<!-- Follow-up Date -->
+									<div class="mb-3" id="followUpDateDiv" style="display: none;">
+										<label class="form-label fw-bold">
+											<i class="bi bi-calendar-event text-primary"></i> Follow Up Date
+											<span class="text-danger">*</span>
+										</label>
+										<input name="followUpDate" 
+										       type="date" 
+										       class="form-control" />
+										<small class="text-muted">Set reminder for follow-up</small>
+									</div>
+
+									<!-- Info Alert -->
+									<div class="alert alert-info">
+										<i class="bi bi-info-circle-fill"></i>
+										<strong>Note:</strong> All fields marked with <span class="text-danger">*</span> are required.
+									</div>
+
+									<!-- Buttons -->
+									<div class="d-flex gap-2">
+										<button type="submit" class="btn btn-success">
+											<i class="bi bi-check-circle"></i> Submit Inquiry
+										</button>
+										<button type="reset" class="btn btn-outline-warning">
+											<i class="bi bi-arrow-clockwise"></i> Reset
+										</button>
+										<a href="/inquiryMangement" class="btn btn-outline-secondary">
+											<i class="bi bi-x-circle"></i> Cancel
+										</a>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
 	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	
 	<script>
+		// Phone number validation
+		const phoneInput = document.querySelector('input[name="phoneno"]');
+		if (phoneInput) {
+			phoneInput.addEventListener('input', function() {
+				this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+			});
+		}
+
 		function toggleFollowUpdate() {
-
-			var status = document.getElementById("status").value;
-			var followUpDateDiv = document.getElementById("followUpDateDiv");
-
+			const status = document.getElementById("status").value;
+			const followUpDateDiv = document.getElementById("followUpDateDiv");
+			
 			if (status === "Interested - (follow up)") {
 				followUpDateDiv.style.display = "block";
 			} else {
 				followUpDateDiv.style.display = "none";
 			}
 		}
-	</script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-		crossorigin="anonymous"></script>
-</body>
 
+		// Form validation
+		(function() {
+			'use strict';
+			const form = document.getElementById('newInquiryForm');
+			form.addEventListener('submit', event => {
+				if (!form.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
+				form.classList.add('was-validated');
+			}, false);
+		})();
+	</script>
+</body>
 </html>
