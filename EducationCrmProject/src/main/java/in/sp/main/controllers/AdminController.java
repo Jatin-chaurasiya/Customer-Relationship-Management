@@ -1,5 +1,7 @@
 package in.sp.main.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -122,6 +124,90 @@ public class AdminController {
 		} catch (Exception e) {
 			return "error";
 		}
+	}
+
+	@GetMapping("/addAdmin")
+	public String openAddAdminPage(Model model, HttpSession session) {
+
+		Admin currentAdmin = (Admin) session.getAttribute("sessionAdmin");
+
+		if (currentAdmin == null) {
+			return "redirect:/adminLogin";
+		}
+
+		model.addAttribute("admin", new Admin());
+		return "add-admin";
+	}
+
+	@PostMapping("/saveAdmin")
+	public String saveAdmin(@ModelAttribute Admin admin, RedirectAttributes redirectAttributes, HttpSession session) {
+
+		Admin currentAdmin = (Admin) session.getAttribute("sessionAdmin");
+
+		if (currentAdmin == null) {
+			return "redirect:/adminLogin";
+		}
+
+		try {
+
+			if (adminRepository.existsByEmail(admin.getEmail())) {
+				redirectAttributes.addFlashAttribute("errorMsg", "Email already exists!");
+				return "redirect:/addAdmin";
+			}
+
+			adminService.saveAdmin(admin);
+
+			redirectAttributes.addFlashAttribute("successMsg", "New Admin Added Successfully!");
+
+			return "redirect:/adminProfile";
+
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMsg", "Failed to add admin");
+			return "redirect:/addAdmin";
+		}
+	}
+
+	@GetMapping("/removeAdmin")
+	public String openRemoveAdminPage(Model model, HttpSession session) {
+
+		Admin currentAdmin = (Admin) session.getAttribute("sessionAdmin");
+
+		if (currentAdmin == null) {
+			return "redirect:/adminLogin";
+		}
+
+		List<Admin> adminList = adminService.getAllAdmins();
+
+		model.addAttribute("admins", adminList);
+
+		return "remove-admin";
+	}
+
+	@PostMapping("/deleteAdmin")
+	public String deleteAdmin(@RequestParam("id") Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+
+		Admin currentAdmin = (Admin) session.getAttribute("sessionAdmin");
+
+		if (currentAdmin == null) {
+			return "redirect:/adminLogin";
+		}
+
+		try {
+
+			if (currentAdmin.getId().equals(id)) {
+				redirectAttributes.addFlashAttribute("errorMsg", "You cannot delete yourself!");
+				return "redirect:/removeAdmin";
+			}
+
+			adminService.deleteAdmin(id);
+
+			redirectAttributes.addFlashAttribute("successMsg", "Admin removed successfully!");
+
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMsg", "Delete failed!");
+		}
+
+		return "redirect:/removeAdmin";
 	}
 
 }

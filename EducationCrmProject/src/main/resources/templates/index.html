@@ -16,16 +16,14 @@
 </head>
 
 <body>
-	<!--HEADER START-->
+	
 	<div th:if="${sessionUser == null OR sessionUser == ''}">
 		<div th:replace="~{fragments/header :: header}"></div>
 	</div>
 	<div th:unless="${sessionUser == null OR sessionUser == ''}">
 		<div th:replace="~{fragments/headerProfile :: header}"></div>
 	</div>
-	<!-- Header Ends -->
 
-	<!--Main  section Start-->
 	<main class="container-fluid">
 		<!--Banner-->
 		<section>
@@ -39,7 +37,7 @@
 
 			<!--Courses-->
 			<div class="row g-4">
-				<!-- removed justify-content-center -->
+				
 
 				<!--one course card start-->
 				<div th:each="course : ${courseList}"
@@ -101,11 +99,7 @@
 		</section>
 	</main>
 
-	<!--Main section ends-->
-
-	<!--Footer starts-->
 	<div th:replace="~{fragments/footer :: footer}"></div>
-	<!--Footer ends-->
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"

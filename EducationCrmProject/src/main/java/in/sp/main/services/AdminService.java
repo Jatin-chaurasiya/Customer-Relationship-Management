@@ -1,5 +1,7 @@
 package in.sp.main.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,4 +35,17 @@ public class AdminService {
 		}
 		return adminRepository.existsByEmail(email.trim().toLowerCase());
 	}
+
+	public void saveAdmin(Admin admin) {
+		adminRepository.save(admin);
+	}
+
+	public List<Admin> getAllAdmins() {
+		return adminRepository.findAll();
+	}
+
+	public void deleteAdmin(Long id) {
+		adminRepository.deleteById(id);
+	}
+
 }

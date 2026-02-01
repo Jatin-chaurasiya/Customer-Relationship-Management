@@ -20,6 +20,7 @@ import in.sp.main.repositories.OrdersRepository;
 import in.sp.main.repositories.UserRepository;
 import in.sp.main.services.CourseService;
 import in.sp.main.services.UserService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @SessionAttributes("sessionUser")
@@ -79,6 +80,18 @@ public class UserController {
 		return "login";
 	}
 
+	@GetMapping("/about")
+	public String openAboutPage(HttpSession session, Model model) {
+		model.addAttribute("sessionUser", session.getAttribute("user"));
+		return "about";
+	}
+
+	@GetMapping("/contact")
+	public String openContactPage(HttpSession session, Model model) {
+		model.addAttribute("sessionUser", session.getAttribute("user"));
+		return "contact";
+	}
+
 	@PostMapping("/loginForm")
 	public String handleLoginForm(@ModelAttribute("user") User user, Model model) {
 		boolean isAuthenticated = userService.loginUserService(user.getEmail(), user.getPassword());
@@ -130,6 +143,20 @@ public class UserController {
 		model.addAttribute("purchasedCourseList", purchasedCourseList);
 
 		return "my-courses";
+	}
+
+	// Helper Method - Get Purchased Course Names by Email
+	private List<String> getPurchasedCourseNamesByEmail(String email) {
+		List<Object[]> purchasedCourses = ordersRepository.findPurchasedCourseByEmail(email);
+		List<String> courseNames = new ArrayList<>();
+
+		for (Object[] course : purchasedCourses) {
+			// course[3] is the course name based on your existing query
+			String courseName = (String) course[3];
+			courseNames.add(courseName);
+		}
+
+		return courseNames;
 	}
 
 }

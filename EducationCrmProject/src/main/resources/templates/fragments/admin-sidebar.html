@@ -30,13 +30,14 @@
 		</a>
 
 		<!-- Another Management -->
-		<a class="nav-link" href="adminFeedback"><i class="bi bi-chat-dots-fill"></i>
-			Feedback</a>
-			 <a class="nav-link" href="/sale"><i
-			class="bi bi-bar-chart-line-fill"></i> Sales</a>			
-			 <a class="nav-link" href="#"><i class="bi bi-person-fill-add"></i>
-			Add Admin</a>
-			 <a class="nav-link" href="/adminLogout"><i
+		<a class="nav-link" href="adminFeedback"><i
+			class="bi bi-chat-dots-fill"></i> Feedback</a> <a class="nav-link"
+			href="/sale"><i class="bi bi-bar-chart-line-fill"></i> Sales</a> <a
+			th:href="@{/addAdmin}" class="nav-link"> <i
+			class="bi bi-person-plus"></i> Add Admin
+		</a> <a th:href="@{/removeAdmin}" class="nav-link"> <i
+			class="bi bi-trash"></i> Remove Admin
+		</a> <a class="nav-link" href="/adminLogout"><i
 			class="bi bi-box-arrow-right"></i> Logout</a>
 	</nav>
 </div>
