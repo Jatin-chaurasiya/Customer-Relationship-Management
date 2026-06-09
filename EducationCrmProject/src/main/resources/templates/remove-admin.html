@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Remove Admin</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="stylesheet" th:href="@{/css/admin-layout.css}" />
+
+<style>
+
+/* center layout same as add-admin */
+.center-wrapper {
+	min-height: 90vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* same card style */
+.admin-card {
+	width: 100%;
+	max-width: 700px;
+	border-radius: 16px;
+	overflow: hidden;
+	border: none;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* red gradient for delete page */
+.card-header-custom {
+	background: linear-gradient(135deg, #dc3545, #ff6b6b);
+	color: white;
+	text-align: center;
+	padding: 25px;
+}
+
+/* table */
+.table td {
+	vertical-align: middle;
+}
+
+/* delete button */
+.btn-delete {
+	border-radius: 10px;
+	font-weight: 600;
+	transition: 0.3s;
+}
+
+.btn-delete:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+</style>
+</head>
+
+<body>
+
+	<!-- Sidebar -->
+	<div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+
+	<div class="content">
+
+		<div class="container-fluid center-wrapper">
+
+			<div class="card admin-card">
+
+				<!-- Header -->
+				<div class="card-header-custom">
+					<h4 class="mb-1">
+						<i class="bi bi-trash-fill"></i> Remove Admin
+					</h4>
+					<small>Select admin to delete</small>
+				</div>
+
+				<!-- Messages -->
+				<div th:replace="~{fragments/SuccessandError :: SuccessandError}"></div>
+
+				<!-- Body -->
+				<div class="card-body p-4">
+
+					<div class="table-responsive">
+
+						<table class="table table-hover text-center">
+
+							<thead class="table-dark">
+								<tr>
+									<th>Email</th>
+									<th width="150">Action</th>
+								</tr>
+							</thead>
+
+							<tbody>
+
+								<tr th:each="admin : ${admins}">
+
+									<td th:text="${admin.email}">email</td>
+
+									<td>
+										<form th:action="@{/deleteAdmin}" method="post">
+											<input type="hidden" name="id" th:value="${admin.id}" />
+
+											<button type="button" class="btn btn-danger btn-delete w-100"
+												data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+												th:attr="data-id=${admin.id}">
+												<i class="bi bi-trash"></i> Delete
+											</button>
+										</form>
+									</td>
+
+								</tr>
+
+							</tbody>
+
+						</table>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- Delete Confirmation Modal -->
+	<div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+
+		<div class="modal-dialog modal-dialog-centered">
+
+			<div class="modal-content">
+
+				<div class="modal-header bg-danger text-white">
+					<h5 class="modal-title">
+						<i class="bi bi-exclamation-triangle-fill"></i> Confirm Delete
+					</h5>
+					<button type="button" class="btn-close btn-close-white"
+						data-bs-dismiss="modal"></button>
+				</div>
+
+				<div class="modal-body text-center">
+					<p class="mb-0 fw-semibold">Are you sure you want to delete
+						this admin?</p>
+					<small class="text-muted">This action cannot be undone.</small>
+				</div>
+
+				<div class="modal-footer">
+
+					<button class="btn btn-secondary" data-bs-dismiss="modal">
+						Cancel</button>
+
+					<form id="deleteForm" method="post" th:action="@{/deleteAdmin}">
+						<input type="hidden" name="id" id="deleteAdminId">
+						<button class="btn btn-danger">Yes, Delete</button>
+					</form>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		const deleteModal = document.getElementById('confirmDeleteModal');
+
+		deleteModal.addEventListener('show.bs.modal', function(event) {
+
+			const button = event.relatedTarget;
+			const id = button.getAttribute('data-id');
+
+			document.getElementById('deleteAdminId').value = id;
+		});
+	</script>
+
+
+</body>
+</html>
