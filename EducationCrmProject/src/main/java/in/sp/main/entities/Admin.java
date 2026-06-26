@@ -17,13 +17,11 @@ public class Admin {
 	private String email;
 
 	@Column(nullable = false, length = 255)
-	private String password; // Store hashed password
+	private String password;
 
-	// Default constructor
 	public Admin() {
 	}
 
-	// Constructor with parameters
 	public Admin(String email, String password) {
 		this.email = email;
 		this.password = password;
